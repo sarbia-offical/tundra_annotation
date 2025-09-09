@@ -7,25 +7,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { CircleEllipsisIcon, Delete, Edit } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useScrollToAnnotation } from "../Hooks/useScrollToAnnotation";
-import { useAnnotateContext } from "../App/AppContext";
 
 interface AnnotationSettingProps {
   value: Annotate;
   className?: string;
+  changeItem?: () => void;
 }
 
 export const AnnotationSetting: React.FC<AnnotationSettingProps> = ({
-  value,
   className,
+  changeItem,
 }) => {
   const { t } = useTranslation();
-  const { scrollToAnnotation } = useScrollToAnnotation();
-  const { openEditor } = useAnnotateContext();
   const shadowRoot = document.querySelector("dolphin-memory")?.shadowRoot;
   const handleEditAnnotation = () => {
-    scrollToAnnotation(value.uid);
-    openEditor(value.uid);
+    changeItem && changeItem();
   };
   return (
     <Popover>

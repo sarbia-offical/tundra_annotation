@@ -22,6 +22,7 @@ import {
   AnnotateFormValue,
 } from "./AnnotateForm";
 import { AnnotateList } from "./AnnotateList";
+import { ColorPicker } from "./ColorPicker";
 import { JumpToCurrentNote } from "./JumpToCurrentNote";
 import { useTranslation } from "react-i18next";
 import { useMarkContext } from "../state/hooks";
@@ -33,6 +34,7 @@ interface EditAnnotationType {
   open: boolean;
   annotateUid: string;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  close?: () => void;
   // 删除注释
   handleDelete: () => Promise<boolean> | void;
   // 添加表单数据回调
@@ -43,6 +45,7 @@ export const EditAnnotation: React.FC<EditAnnotationType> = ({
   open,
   annotateUid,
   setOpen,
+  close,
   handleDelete,
   onFormSubmit,
 }) => {
@@ -51,6 +54,8 @@ export const EditAnnotation: React.FC<EditAnnotationType> = ({
   const { t } = useTranslation();
   const markState = useMarkContext((state: MarkState) => ({
     annotations: state.annotations,
+    color: state.color,
+    changeColor: state.changeColor,
   }));
   const { changeJumpToCurrentNote } = useEditAnnotateContextValue();
   const annotateData = markState.annotations[annotateUid];
@@ -76,6 +81,7 @@ export const EditAnnotation: React.FC<EditAnnotationType> = ({
       setAnnotationList(notes);
     } else {
       setAnnotationList([]);
+      close && close();
     }
   }, [open, annotateData]);
 
@@ -101,6 +107,13 @@ export const EditAnnotation: React.FC<EditAnnotationType> = ({
             />
             <AnnotateList notes={annotationList} />
           </div>
+          <ColorPicker
+            value={markState.color}
+            className="p-2"
+            onChange={(c) => {
+              markState.changeColor(c);
+            }}
+          />
           <AnnotateForm
             ref={annotateFormRef}
             onSubmitSuccess={handleFormSubmitSuccess}

@@ -14,11 +14,11 @@
 ## 🚀 Features
 
 - Accurate serialization and deserialization can adapt to most web pages
-- Support highlighting the formula part
+- This plugin supports highlighting the formula part
 - Powerful and reliable web highlighting
-- Support multiple highlight styles and can be customized
+- This plugin supports multiple highlight styles and can be customized
 - Modern technology stack
-- Support dark mode and localization
+- This plugin supports dark mode and localization
 - Reserve note comment function
 - Backend services coming soon
 
@@ -54,7 +54,7 @@ pnpm run dev
 When you have completed these steps, `WXT` will help you open new tabs
 
 <p align="center">
-  <img src="./md/Function_recording.gif" alt="Tundra annotation"/>
+  <img src="./md/Function_recording2.gif" alt="Tundra annotation"/>
 </p>
 
 ## 💼 Packages

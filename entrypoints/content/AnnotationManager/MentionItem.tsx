@@ -8,6 +8,10 @@ import { AnnotationSetting } from "./AnnotationSetting";
 import { useEffect, useState } from "react";
 import { isEmpty } from "lodash";
 import moment from "moment";
+import { useAnnotateContext } from "../App/AppContext";
+import { useScrollToAnnotation } from "../Hooks/useScrollToAnnotation";
+import { useMarkContext } from "../state/hooks";
+import { MarkState } from "../state/type";
 
 export interface MentionItemProps {
   children: React.ReactNode;
@@ -20,12 +24,17 @@ export const MentionItem: React.FC<MentionItemProps> = ({
   value,
 }) => {
   const [durtaion, setDurtaion] = useState<boolean>(true);
+  const { openEditor } = useAnnotateContext();
+  const { scrollToAnnotation } = useScrollToAnnotation();
+  const markState = useMarkContext((state: MarkState) => ({
+    changeColor: state.changeColor,
+  }));
   useEffect(() => {
     const timer = setTimeout(() => setDurtaion(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
-  const notes = value.data.notes ?? [];
+  const notes = value?.data?.notes ?? [];
   return (
     <div
       className={`p-2 mt-2 rounded-md transition-all duration-300 border-[#eeeeee] dark:border-[#222226] border-[1px] border-solid hover:bg-[#f7f7f7] dark:hover:bg-[#222226] ${className}`}
@@ -40,7 +49,15 @@ export const MentionItem: React.FC<MentionItemProps> = ({
             <div className="h-full flex flex-col justify-between ml-2 flex-1 relative">
               <AnnotationId value={value} />
               <AnnomationTimeStamp timeStamp={value.createDate} />
-              <AnnotationSetting value={value} />
+              <AnnotationSetting
+                value={value}
+                changeItem={() => {
+                  const { uid, color } = value;
+                  openEditor(uid);
+                  scrollToAnnotation(uid);
+                  markState.changeColor(color);
+                }}
+              />
             </div>
           </div>
           {!isEmpty(value.text) ? (

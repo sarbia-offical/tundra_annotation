@@ -45,18 +45,20 @@ export default () => {
   const { i18n } = useTranslation();
   const appState = useAppInconContext((state: AppInfoState) => ({
     defaultEnabled: state.defaultEnabled,
-    changeDefaultEndbaled: state.changeDefaultEndbaled,
     theme: state.theme,
-    changeTheme: state.changeTheme,
     isLoaded: state.isLoaded,
     lang: state.i18n,
+    changeDefaultEndbaled: state.changeDefaultEndbaled,
+    changeTheme: state.changeTheme,
   }));
   const markState = useMarkContext((state: MarkState) => ({
     color: state.color,
-    changeCurrentAnnotation: state.changeCurrentAnnotation,
     annotations: state.annotations,
+    currentAnnotation: state.currentAnnotation,
+    changeCurrentAnnotation: state.changeCurrentAnnotation,
     changeAnnotations: state.changeAnnotations,
     initAllAnnotations: state.initAllAnnotations,
+    changeColor: state.changeColor,
   }));
 
   const [_, startObserver] = useSelection();
@@ -72,7 +74,6 @@ export default () => {
     () => () => {
       browser.runtime.onMessage.addListener(
         (message: ExtMessage, sender, sendResponse) => {
-          console.log("message", message);
           if (message.messageType == MessageType.clickExtIcon) {
             appState.changeDefaultEndbaled(
               message?.content as unknown as boolean,
@@ -119,8 +120,10 @@ export default () => {
           updateDate: moment().valueOf(),
         };
         markState.changeAnnotations(annotateUid, annotation);
-        markerInstance?.unpaint(annotateUid);
-        markerInstance?.paint(annotation);
+        if (markerInstance) {
+          markerInstance.unpaint(annotateUid);
+          markerInstance.paint(annotation);
+        }
       }
     },
     [markState.annotations, annotateUid, markerInstance]
@@ -166,7 +169,7 @@ export default () => {
     element: HTMLElement,
     context: Context
   ) {
-    const uid = context.serializedRange.uid;
+    const { uid, color } = context.serializedRange;
     const hasAnnotation = context.serializedRange.data.notes;
     context.serializedRange;
     if (
@@ -188,6 +191,7 @@ export default () => {
           color={context.serializedRange.color}
           onClick={() => {
             openEditor(uid);
+            markState.changeColor(color);
           }}
           value={{
             ...context.serializedRange,
@@ -230,11 +234,12 @@ export default () => {
         {
           onHighlightClick: (
             context: Context,
-            _element: HTMLElement,
+            _ele: HTMLElement,
             _e: Event
           ) => {
-            const uid = context.serializedRange.uid;
+            const { uid, color } = context.serializedRange;
             openEditor(uid);
+            markState.changeColor(color);
           },
         },
         {
@@ -260,28 +265,57 @@ export default () => {
     }
   }, [appState.isLoaded]);
 
-  // 颜色变化，保存当前的笔记值
+  const handleAddAnnotate = useCallback(
+    (annotation: Annotate, date: number) => {
+      addAnnotate({
+        ...annotation,
+        pageData: {
+          url: getNormalizedUrl(),
+          title: document.title,
+          host: window.location.host,
+        },
+        data: {
+          notes: [],
+        },
+        createDate: date,
+        updateDate: date,
+      });
+    },
+    [addAnnotate] // 依赖项
+  );
+
+  /**
+   * 颜色更新
+   */
+  const handleChangeColor = useCallback(
+    (currentAnnotation: string, date: number, color: string) => {
+      const annotations = markState.annotations;
+      let annotation = { ...(annotations[currentAnnotation] || {}) };
+      annotation["color"] = color;
+      annotation["updateDate"] = date;
+      // todo: 同步到后端
+      markState.changeAnnotations(currentAnnotation, annotation);
+      if (markerInstance) {
+        markerInstance.unpaint(currentAnnotation);
+        markerInstance.paint(annotation);
+      }
+    },
+    [markState.annotations]
+  );
+
+  // 颜色变化逻辑
   useEffect(() => {
-    if (!isEmpty(markState.color) && !isNil(markerInstance)) {
+    if (!isEmpty(markState.color) && !isEmpty(markerInstance)) {
       const date = moment().valueOf();
-      const annotation = highlight(markState.color, markerInstance, date);
-      if (!isNil(annotation)) {
-        addAnnotate({
-          ...annotation,
-          pageData: {
-            url: getNormalizedUrl(),
-            title: document.title,
-            host: window.location.host,
-          },
-          data: {
-            notes: [],
-          },
-          createDate: date,
-          updateDate: date,
-        });
+      const currentAnnotation = markState.currentAnnotation;
+      if (isEmpty(currentAnnotation)) {
+        const annotation = highlight(markState.color, markerInstance, date);
+        annotation ? handleAddAnnotate(annotation, date) : null;
+      } else if (!isEmpty(currentAnnotation)) {
+        handleChangeColor(currentAnnotation, date, markState.color);
       }
     }
-  }, [markerInstance, markState.color]);
+  }, [markerInstance, markState.color, markState.currentAnnotation]);
 
   const shouldRenderHeader = useMemo(() => {
     return appState.defaultEnabled && appState.isLoaded;
@@ -321,6 +355,9 @@ export default () => {
           setOpen={setOpenEditAnnotate}
           handleDelete={handleDeleteAnnotation}
           onFormSubmit={handleFormSubmit}
+          close={() => {
+            markState.changeCurrentAnnotation("");
+          }}
         />
       </EditAnnotateProvider>
     </AnnotateContext.Provider>
