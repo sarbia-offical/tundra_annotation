@@ -1,0 +1,18 @@
+.card_reverse {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100%;
+  transform: translateX(-50%) translateY(-50%) rotateY(180deg);
+  transform-style: preserve-3d;
+  transition: all 0.3s linear;
+  backface-visibility: hidden;
+  overflow: hidden;
+  will-change: transform;
+}
+.normal {
+  transform: translateX(-50%) translateY(-50%) rotateY(0deg);
+}
+.reverse {
+  transform: translateX(-50%) translateY(-50%) rotateY(180deg);
+}

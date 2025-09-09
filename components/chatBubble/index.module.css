@@ -1,0 +1,21 @@
+.rightBage:before {
+  content: "";
+  position: absolute;
+  left: auto;
+  right: -10px;
+  top: 0;
+  border: 5px solid transparent;
+  border-right-color: transparent;
+  border-left-color: #bbf7d0;
+  border-top-color: #bbf7d0;
+}
+
+.leftBage:before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 0;
+  border: 5px solid transparent;
+  border-right-color: #dbeafe;
+  border-top-color: #dbeafe;
+}

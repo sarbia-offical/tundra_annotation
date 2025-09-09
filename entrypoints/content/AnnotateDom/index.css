@@ -1,0 +1,14 @@
+.light .annotate_bg {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.light .annotate_bg:hover {
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 0 4px #c8c8c8;
+}
+.dark .annotate_bg {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.dark .annotate_bg:hover {
+  background-color: rgba(0, 0, 0);
+}
