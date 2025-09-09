@@ -20,7 +20,6 @@ export function useMarker(): UseMarkerType {
       highlightPainter,
     });
     setMarkerInstance(marker);
-    marker.addEventListeners();
     return marker;
   };
   return [markerInstance, startMarker];

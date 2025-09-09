@@ -10,6 +10,7 @@ import {
   AttributeNameHighlightId,
   AttributeNameHighlightColor,
   defaultCharsToKeepForTextBeforeAndTextAfter,
+  annotationWrapper,
 } from "./Marker.type";
 import { generateUUID } from "@/lib/Utils";
 const blackListedElementStyle = document.createElement("style");
@@ -136,14 +137,8 @@ class Marker {
     }
 
     const tagName = (element as any).tagName;
-    return (
-      tagName === "STYLE" ||
-      tagName === "SCRIPT" ||
-      tagName === "TITLE" ||
-      tagName === "NOSCRIPT" ||
-      tagName === "SVG" ||
-      tagName === "svg"
-    );
+    const blacklistedTags = ["STYLE", "SCRIPT", "TITLE", "NOSCRIPT", "SVG"];
+    return blacklistedTags.includes(tagName?.toUpperCase());
   }
 
   private static getRealOffset(textNode: Node, normalizedOffset: number) {
@@ -175,8 +170,7 @@ class Marker {
       const child = childNodes[i] as HTMLElement;
       if (
         child.nodeType === Node.ELEMENT_NODE &&
-        (child.classList.contains("wave-canvas") ||
-          child.classList.contains("annotationWrapper"))
+        child.classList.contains(`${annotationWrapper}`)
       ) {
         element.removeChild(child);
         continue;
@@ -578,8 +572,8 @@ class Marker {
     if (!e.target || !(e.target instanceof (this.window as any).HTMLElement)) {
       return;
     }
-
     const target = e.target as HTMLElement;
+
     const id = target.getAttribute(AttributeNameHighlightId);
     if (id && this.eventHandler.onHighlightClick) {
       this.eventHandler.onHighlightClick(this.buildContext(id), target, e);
@@ -593,6 +587,12 @@ class Marker {
 
     const target = e.target as HTMLElement;
     let newHoverId = target?.getAttribute(AttributeNameHighlightId);
+    console.log(
+      "this.state.lastHoverId === newHoverId",
+      this.state.lastHoverId,
+      newHoverId
+    );
+
     if (this.state.lastHoverId === newHoverId) {
       return;
     }
@@ -612,11 +612,11 @@ class Marker {
    */
   public addEventListeners() {
     this.rootElement.addEventListener("click", this.clickListener, true);
-    this.rootElement.addEventListener(
-      "mouseover",
-      this.mouseoverListener,
-      true
-    );
+    // this.rootElement.addEventListener(
+    //   "mouseover",
+    //   this.mouseoverListener,
+    //   true
+    // );
   }
 
   public removeEventListeners() {

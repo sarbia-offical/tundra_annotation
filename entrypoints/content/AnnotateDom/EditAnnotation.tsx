@@ -73,7 +73,6 @@ export const EditAnnotation: React.FC<EditAnnotationType> = ({
   useEffect(() => {
     if (open && annotateData) {
       const notes = annotateData.data?.notes || [];
-      console.log("annotateData.data", annotateData);
       setAnnotationList(notes);
     } else {
       setAnnotationList([]);

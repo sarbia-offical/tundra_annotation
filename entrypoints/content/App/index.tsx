@@ -11,7 +11,6 @@ import { useMarkContext } from "../state/hooks";
 import { useTextHighlighter } from "../Hooks/usePaint";
 import { useScrollToAnnotation } from "../Hooks/useScrollToAnnotation";
 import Marker from "@/lib/Marks/Marker";
-import { AttributeNameHighlightColor } from "@/lib/Marks/Marker.type";
 import { EditAnnotation } from "../AnnotateDom/EditAnnotation";
 import { AnnotateFormValue } from "../AnnotateDom/AnnotateForm";
 import { AnnotationIcon } from "../AnnotateDom/AnnotationIcon";
@@ -20,7 +19,14 @@ import { AppInfoState } from "@/state/type";
 import ExtMessage, { MessageType } from "@/entrypoints/type";
 import { Theme } from "@/hooks/useStorage.type";
 import { MarkState } from "../state/type";
-import { Context } from "@/lib/Marks/Marker.type";
+import {
+  Context,
+  annotationWrapper,
+  AttributeNameHighlightColor,
+  AttributeNameHighlightId,
+  cancelTruncation,
+  HighlightClassName,
+} from "@/lib/Marks/Marker.type";
 import { Annotate } from "@/services/api.type";
 import { getNormalizedUrl, createWavyLines } from "@/lib/Utils";
 import { createRoot } from "react-dom/client";
@@ -140,8 +146,8 @@ export default () => {
    * @param bgc
    */
   function applyHighlightStyle(element: HTMLElement, bgc: string) {
-    element.parentElement?.classList.add("cancelTruncation");
-    element.classList.add("annotate-highlighted-text");
+    element.parentElement?.classList.add(`${cancelTruncation}`);
+    element.classList.add(`${HighlightClassName}`);
     const wavyBg = createWavyLines(bgc);
     element.style.setProperty("--underline-bg", wavyBg);
     element.style.setProperty("--bg", bgc);
@@ -165,13 +171,14 @@ export default () => {
     context.serializedRange;
     if (
       isEmpty(hasAnnotation) ||
-      document.getElementById(`annotationWrapper-${uid}`)
+      document.getElementById(`${annotationWrapper}-${uid}`)
     ) {
       return;
     }
     const iconContainer = document.createElement("div");
-    iconContainer.classList.add("annotationWrapper");
-    iconContainer.id = `annotationWrapper-${uid}`;
+    iconContainer.classList.add(`${annotationWrapper}`);
+    iconContainer.id = `${annotationWrapper}-${uid}`;
+    iconContainer.setAttribute(AttributeNameHighlightId, uid);
     element.appendChild(iconContainer);
 
     const root = createRoot(iconContainer);
@@ -240,13 +247,15 @@ export default () => {
         }
       );
       (async () => {
+        marker.addEventListeners();
         const url = getNormalizedUrl();
         const annotateData = await getAnnotations(url);
         const list = annotateData.data || [];
-        if (isEmpty(list)) return;
-        repaintAnnotation(list, marker);
-        markState.initAllAnnotations(list);
-        scrollToAnnotation();
+        if (!isEmpty(list)) {
+          repaintAnnotation(list, marker);
+          markState.initAllAnnotations(list);
+          scrollToAnnotation();
+        }
       })();
     }
   }, [appState.isLoaded]);

@@ -29,7 +29,6 @@ class ExtMessage {
   from?: MessageFrom;
   eventType?: string;
   constructor(messageType: MessageType) {
-    console.log("init");
     this.messageType = messageType;
   }
   basicType?: string;

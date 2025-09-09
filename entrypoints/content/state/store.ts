@@ -48,8 +48,6 @@ export const createMarkStore = (options: DeepPartial<Mark>) => {
         ) {
           set((state) => {
             if (isNil(value)) {
-              console.log("state.annotations[id]", state.annotations[id]);
-
               delete state.annotations[id];
             } else {
               state.annotations[id] = value;

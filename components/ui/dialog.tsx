@@ -83,7 +83,6 @@ const DialogContent = React.forwardRef<
         const handleWheel = (e: WheelEvent) => {
           element.scrollTop += e.deltaY;
         };
-        console.log("element", element);
         element.addEventListener("wheel", handleWheel, { passive: false });
 
         // 保存用于解绑

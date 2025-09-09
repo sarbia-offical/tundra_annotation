@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "@/entrypoints/sidebar.tsx";
 import { browser } from "wxt/browser";
 import ExtMessage, { MessageType } from "@/entrypoints/type";
@@ -42,7 +42,6 @@ export default () => {
         <div className="flex h-screen relative">
           <Sidebar
             sideNav={(sidebarType: SidebarType) => {
-              console.log("sidebarType", sidebarType);
               setSidebarType(sidebarType);
               setHeadTitle(sidebarType);
             }}

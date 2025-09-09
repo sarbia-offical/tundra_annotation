@@ -22,12 +22,7 @@ export const AnnotationId: React.FC<AnnotationIconProps> = ({
       }}
     >
       <p className="mr-1 text-[12px]">UID: #{value.uid.substring(0, 6)}</p>
-      <Copy
-        className="w-3 h-3"
-        onClick={() => {
-          console.log("copy");
-        }}
-      />
+      <Copy className="w-3 h-3" />
     </div>
   );
 };

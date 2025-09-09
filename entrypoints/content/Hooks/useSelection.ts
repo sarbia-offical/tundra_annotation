@@ -33,7 +33,6 @@ export function useSelection(): [PositionType | undefined, () => void] {
         changePopoverVisible(false);
       } else {
         const selection = document.getSelection();
-        console.log("selection", selection);
         if (selection) {
           const rect = selectionFocusRect(selection);
           const popoverPosition = rect

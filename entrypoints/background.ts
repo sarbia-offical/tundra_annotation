@@ -18,8 +18,6 @@ export default defineBackground(() => {
 
   browser.action.onClicked.addListener((tab) => {
     // 发送消息给content-script.js
-    console.log("click icon");
-    console.log(tab);
     browser.tabs.sendMessage(tab.id!, {
       messageType: MessageType.clickExtIcon,
     });
@@ -69,6 +67,8 @@ export default defineBackground(() => {
         // WXT 20版本处理监听器，使用sendResponse的回调函数新写法
         (async () => {
           const data = await handler(message.params);
+          console.log("data", data);
+
           sendResponse(data);
         })();
         return true;

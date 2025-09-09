@@ -6,7 +6,6 @@ import { Annotate } from "./api.type";
  * @returns
  */
 export const addAnnotateService = async (params: Record<string, any>) => {
-  console.log("addAnnotate", JSON.stringify(params));
   return Promise.resolve({ success: true, data: "success" });
 };
 
@@ -494,9 +493,7 @@ export const getAnnotationsService = async (params: Record<string, any>) => {
     "https://help.fanruan.com/dvg/doc-view-59.html": mockList,
     "https://baike.baidu.com/item/%E7%89%9B%E9%A1%BF/5489111": mockList2,
   };
-  const sortedList = annotateObj[params.path as string].sort(
-    (a, b) => (b.text || "").length - (a.text || "").length
-  );
+  const sortedList = annotateObj[params.path as string] || [];
   return Promise.resolve({ success: true, data: sortedList });
 };
 
@@ -506,7 +503,6 @@ export const getAnnotationsService = async (params: Record<string, any>) => {
  * @returns
  */
 export const updateAnnotateService = async (params: Record<string, any>) => {
-  console.log("updateAnnotate", params);
   return Promise.resolve({ success: true, data: params });
 };
 
@@ -516,6 +512,5 @@ export const updateAnnotateService = async (params: Record<string, any>) => {
  * @returns
  */
 export const deleteAnnotateService = async (params: Record<string, any>) => {
-  console.log("deleteAnnotate", params);
   return Promise.resolve({ success: true, data: params });
 };

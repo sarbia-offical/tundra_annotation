@@ -26,7 +26,6 @@ export const useScrollToAnnotation = () => {
       // 获取元素的位置信息，并计算出平滑滚动的目标位置
       const rect = element.getBoundingClientRect();
       if (rect.top === 0) {
-        console.warn("Element is not visible in the viewport.");
         return;
       }
       // 滚动到该元素的位置，减去偏移量 100px

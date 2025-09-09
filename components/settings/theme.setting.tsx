@@ -15,8 +15,6 @@ export function ThemeSettings() {
     (state: AppInfoState) => state.changeTheme
   );
   const bundleChangeTheme = async (value: Theme) => {
-    console.log("value", value);
-
     changeTheme(value, true);
     await browser.runtime.sendMessage({
       messageType: MessageType.changeTheme,

@@ -45,7 +45,6 @@ export function createPasswordSchema(
   minLength: number = 8,
   rules?: PasswordRule[]
 ): ZodType<string> {
-  console.log("TFunction", t("reset"));
   // 使用传入规则或默认规则
   const activeRules = rules ?? defaultPasswordRules;
   return z

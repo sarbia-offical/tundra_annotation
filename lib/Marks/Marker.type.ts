@@ -49,3 +49,6 @@ export const HighlightBlacklistedElementClassName =
 export const AttributeNameHighlightId = "highlight-id";
 export const AttributeNameHighlightColor = "highlight-color";
 export const defaultCharsToKeepForTextBeforeAndTextAfter = 128;
+export const annotationWrapper = "annotationWrapper";
+export const cancelTruncation = "cancelTruncation";
+export const HighlightClassName = "annotate-highlighted-text";
