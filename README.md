@@ -54,7 +54,7 @@ pnpm run dev
 When you have completed these steps, `WXT` will help you open new tabs
 
 <p align="center">
-  <img src="./md/Function_recording2.gif" alt="Tundra annotation"/>
+  <img src="./md/Function_recording3.gif" alt="Tundra annotation"/>
 </p>
 
 ## 💼 Packages
