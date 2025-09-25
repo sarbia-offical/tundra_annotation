@@ -1,3 +1,5 @@
+import { Icons } from "@/components/ui/icons";
+
 export enum STATUS {
   OPEN = "open",
   CLOSE = "close",
@@ -52,10 +54,12 @@ export const options: OptionList = {
     {
       label: "i18n_OPEN",
       value: STATUS.OPEN,
+      icon: Icons.lockOpen,
     },
     {
       label: "i18n_CLOSE",
       value: STATUS.CLOSE,
+      icon: Icons.lock,
     },
   ],
   // 主题
@@ -63,10 +67,12 @@ export const options: OptionList = {
     {
       label: "i18n_LIGHT",
       value: THEME.LIGHT,
+      icon: Icons.sunIcon,
     },
     {
       label: "i18n_DARK",
       value: THEME.DARK,
+      icon: Icons.moonIcon,
     },
   ],
   // 翻译为
@@ -74,10 +80,12 @@ export const options: OptionList = {
     {
       label: "i18n_CHINESE",
       value: TO.CHINESE,
+      icon: Icons.languages,
     },
     {
       label: "i18n_ENGLISH",
       value: TO.ENGLISH,
+      icon: Icons.globe,
     },
   ],
   // 文字展示
@@ -87,18 +95,21 @@ export const options: OptionList = {
       value: FONT_DISPLAY.DEFAULT,
       groupLabel: "i18n_FONT_DISPLAY",
       group: FONT_GROUP,
+      icon: Icons.type,
     },
     {
       label: "i18n_FONT_DISPLAY_BOLD", // 加粗显示
       value: FONT_DISPLAY.BOLD,
       groupLabel: "i18n_FONT_DISPLAY",
       group: FONT_GROUP,
+      icon: Icons.bold,
     },
     {
       label: "i18n_FONT_DISPLAY_ITALIC", // 斜体显示
       value: FONT_DISPLAY.ITALIC,
       groupLabel: "i18n_FONT_DISPLAY",
       group: FONT_GROUP,
+      icon: Icons.italic,
     },
     // 下划线
   ],
@@ -109,12 +120,14 @@ export const options: OptionList = {
       value: UNDERLINE_DISPLAY.DEFAULT,
       groupLabel: "i18n_FONT_UNDERLINE",
       group: FONT_UNDERLINE,
+      icon: Icons.highlighter,
     },
     {
       label: "i18n_UNDERLINE_DISPLAY_WAVY", // 波浪线
       value: UNDERLINE_DISPLAY.WAVY,
       groupLabel: "i18n_FONT_UNDERLINE",
       group: FONT_UNDERLINE,
+      icon: Icons.waves,
     },
   ],
 };
@@ -124,7 +137,7 @@ export const defaultOptions: Record<SettingKeys, string> = {
   THEME: THEME.LIGHT,
   TO: TO.ENGLISH,
   FONT_DISPLAY: FONT_DISPLAY.DEFAULT,
-  UNDERLINE_DISPLAY: UNDERLINE_DISPLAY.DEFAULT,
+  UNDERLINE_DISPLAY: UNDERLINE_DISPLAY.WAVY,
 };
 
 /**

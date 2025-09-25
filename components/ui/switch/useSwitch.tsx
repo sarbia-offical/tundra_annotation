@@ -1,9 +1,10 @@
 import React from "react";
 import { useSwitchContext, useSwitchDispatch } from "./SwitchContext";
+import { RadioOptionConfig } from "./SwitchTypes";
 
 export const useSwitch = () => {
   const switchState = useSwitchContext();
-  const { animationConfig, animation } = switchState;
+  const { animationConfig, animation, options, activeValue } = switchState;
 
   const getBadgeAnimationClass = React.useCallback((): string => {
     if (animationConfig?.badgeAnimation) {
@@ -29,9 +30,16 @@ export const useSwitch = () => {
     return "";
   }, [animationConfig]);
 
+  const activeIndex = React.useMemo(() => {
+    return options.findIndex(
+      (ele: RadioOptionConfig) => ele.value === activeValue
+    );
+  }, [options, activeValue]);
+
   return {
     animation,
     animationConfig,
+    activeIndex,
     getBadgeAnimationClass,
   };
 };

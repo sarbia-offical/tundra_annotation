@@ -6,7 +6,7 @@ const switchVariants = cva(
     "border relative w-full flex h-9 cursor-pointer items-center justify-center",
     "rounded-full px-3 text-xs font-medium transition-colors",
     "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-50",
-    "transition-all duration-300 ease-in-out"
+    "transition-all duration-500 ease-in-out"
   ),
   {
     variants: {

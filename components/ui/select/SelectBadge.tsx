@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { selectVariants } from "./SelectVariants";
 import { XCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface SelectBadgeProps {
   className?: string;
@@ -23,6 +24,7 @@ const SelectBadge = React.forwardRef<HTMLDivElement, SelectBadgeProps>(
       getResponsiveConfig,
       getBadgeAnimationClass,
     } = useSelectContext();
+    const { t } = useTranslation();
     const option = getOptionByValue(value);
     const IconComponent = option?.icon;
     const customStyle = option?.style;
@@ -70,7 +72,7 @@ const SelectBadge = React.forwardRef<HTMLDivElement, SelectBadgeProps>(
           />
         )}
         <span className={cn(screenSize === "mobile" && "truncate", "mr-1")}>
-          {option.label}
+          {t(option.label)}
         </span>
         <div
           role="button"

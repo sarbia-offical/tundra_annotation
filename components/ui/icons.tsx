@@ -40,6 +40,15 @@ import {
   Clock,
   ChevronUp,
   ChevronDown,
+  Lock,
+  LockOpen,
+  Languages,
+  Bold,
+  Type,
+  Italic,
+  Waves,
+  Highlighter,
+  RotateCcw,
 } from "lucide-react";
 
 export const Icons = {
@@ -83,6 +92,15 @@ export const Icons = {
   clock: Clock,
   chevronUp: ChevronUp,
   chevronDown: ChevronDown,
+  lock: Lock,
+  lockOpen: LockOpen,
+  languages: Languages,
+  bold: Bold,
+  type: Type,
+  italic: Italic,
+  waves: Waves,
+  highlighter: Highlighter,
+  rotateCcw: RotateCcw,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

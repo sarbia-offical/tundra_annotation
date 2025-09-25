@@ -80,13 +80,31 @@ export interface SwitchRef extends HTMLDivElement {
 
 export enum ActionType {
   SWITCH = "SWITCH",
+  HOVER = "HOVER",
+  HIGHLIGHTERSTYLE = "HIGHLIGHTERSTYLE",
+  RESET = "RESET",
 }
 
-export type Action = {
-  type: ActionType.SWITCH;
-  text: string;
-};
+export type Action =
+  | {
+      type: ActionType.SWITCH;
+      value: string;
+    }
+  | {
+      type: ActionType.HOVER;
+      value: boolean;
+    }
+  | {
+      type: ActionType.HIGHLIGHTERSTYLE;
+      value: React.CSSProperties;
+    }
+  | {
+      type: ActionType.RESET;
+      value: string;
+    };
 
 export interface SwitchState extends SwitchProps {
   activeValue: string;
+  hoverState: boolean;
+  highlighterStyle: React.CSSProperties;
 }

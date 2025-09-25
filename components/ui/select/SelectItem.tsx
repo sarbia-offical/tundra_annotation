@@ -4,6 +4,7 @@ import { SelectOptionConfig } from "./SelectTypes";
 import { useSelectContext } from "./SelectContext";
 import { cn } from "@/lib/utils";
 import { Check } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface SelectItemProps extends React.ComponentProps<"div"> {
   className?: string;
@@ -14,6 +15,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
   ({ className, option }, ref) => {
     const { selectedValues, toggleOption } = useSelectContext();
     const isSelected = selectedValues.includes(option.value);
+    const { t } = useTranslation();
     return (
       <CommandItem
         key={option.value}
@@ -42,7 +44,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         >
           <Check className="h-4 w-4 text-background" />
         </div>
-        <span>{option.label}</span>
+        <span>{t(option.label)}</span>
       </CommandItem>
     );
   }

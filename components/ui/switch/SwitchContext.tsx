@@ -13,9 +13,25 @@ const switchreducer = (state: SwitchState, action: Action): SwitchState => {
     case ActionType.SWITCH:
       return {
         ...state,
-        activeValue: action.text,
+        activeValue: action.value,
+        hoverState: true,
       };
-
+    case ActionType.HOVER:
+      return {
+        ...state,
+        hoverState: action.value,
+      };
+    case ActionType.HIGHLIGHTERSTYLE:
+      return {
+        ...state,
+        highlighterStyle: action.value,
+      };
+    case ActionType.RESET: // 添加重置处理
+      return {
+        ...state,
+        activeValue: state.defaultValue, // 重置为默认值
+        hoverState: true,
+      };
     default:
       return state;
   }
@@ -48,8 +64,20 @@ export const SwitchProvider: React.FC<{
   const [state, dispatch] = useReducer(switchreducer, {
     ...value,
     activeValue: value.defaultValue,
+    hoverState: true,
     switchType: value?.switchType ? value.switchType : SwitchType.Horizontal,
+    highlighterStyle: {
+      height: 0,
+      width: 0,
+      transform: "translate(0, 0)",
+    },
   });
+  useEffect(() => {
+    dispatch({
+      type: ActionType.SWITCH,
+      value: value.defaultValue,
+    });
+  }, [value.defaultValue]);
 
   return (
     <SwitchStateContext.Provider value={state}>

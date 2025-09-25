@@ -7,12 +7,13 @@ const baseStyle: React.CSSProperties = {
   position: "absolute",
 };
 interface HighlighterProps extends Partial<Omit<HTMLDivElement, "className">> {
-  highlighterStyle?: React.CSSProperties;
+  className?: string;
 }
 const Highlighter = React.forwardRef<HTMLDivElement, HighlighterProps>(
-  ({ highlighterStyle }, ref) => {
+  ({ className }, ref) => {
     const context = useSwitchContext();
-    const { variant, options, activeValue } = context;
+    const { variant, options, activeValue, hoverState, highlighterStyle } =
+      context;
     const activeItem = React.useMemo(
       () =>
         options.find(
@@ -20,15 +21,17 @@ const Highlighter = React.forwardRef<HTMLDivElement, HighlighterProps>(
         ),
       [options, activeValue]
     );
+
     return (
       <div
-        className={cn("bg-primary", switchVariants({ variant }))}
+        className={cn(className, "bg-primary", switchVariants({ variant }))}
         style={{
           ...baseStyle,
-          ...highlighterStyle,
           ...(activeItem?.style
             ? { background: activeItem?.style?.radioColor }
             : {}),
+          ...highlighterStyle,
+          opacity: hoverState ? 0 : 100,
         }}
         aria-hidden="true"
         data-highlighter

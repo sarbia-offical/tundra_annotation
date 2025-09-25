@@ -8,6 +8,7 @@ import { Button } from "../button";
 import { cn } from "@/lib/utils";
 import { SelectBadge } from "./SelectBadge";
 import { selectVariants } from "./SelectVariants";
+import { useTranslation } from "react-i18next";
 
 const SelectTrigger = React.forwardRef<
   HTMLButtonElement,
@@ -37,6 +38,7 @@ const SelectTrigger = React.forwardRef<
     setSelectedValues,
     onValueChange,
   } = useSelectContext();
+  const { t } = useTranslation();
   const responsiveSettings = getResponsiveConfig();
   const widthConstraints = getWidthConstraints();
   const badgeAnimationClass = getBadgeAnimationClass();
@@ -111,12 +113,12 @@ const SelectTrigger = React.forwardRef<
                     >
                       {`+${
                         selectedValues.length - responsiveSettings.maxCount
-                      } 更多`}
+                      } ${t("i18n_Search_More")}`}
                       <div
                         role="button"
                         tabIndex={0}
                         aria-label={`移除多余的选项`}
-                        className="h-4 w-4 cursor-pointer hover:bg-white/20 transition-all duration-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-white/50"
+                        className="h-4 w-4 ml-1 cursor-pointer hover:bg-white/20 transition-all duration-300 rounded-sm focus:outline-none focus:ring-1 focus:ring-white/50"
                         onClick={(event) => {
                           event.stopPropagation();
                           // 清除超出部分的选项
@@ -187,7 +189,7 @@ const SelectTrigger = React.forwardRef<
                             })}
                           />
                         )}
-                        {option.label}
+                        {t(option.label)}
                       </span>
                     </Badge>
                   );

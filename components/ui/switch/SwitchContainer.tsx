@@ -8,22 +8,18 @@ import {
   SwitchRef,
   SwitchType,
 } from "./SwitchTypes";
+import { useSwitch } from "./useSwitch";
 import { Highlighter } from "./Highlighter";
 interface SwitchContainerProps {
   children?: React.ReactNode;
 }
 const SwitchContainer = React.forwardRef<HTMLDivElement, SwitchContainerProps>(
   ({ children }, ref) => {
-    const [highlighterStyle, setHighlighterStyle] =
-      React.useState<React.CSSProperties>({
-        height: 0,
-        width: 0,
-        transform: "translate(0, 0)",
-      });
     const containerRef = React.useRef<HTMLDivElement>(null);
     const radioRefs = React.useRef<(HTMLDivElement | null)[]>([]);
     const switchState = useSwitchContext();
     const dispatch = useSwitchDispatch();
+    const { activeIndex } = useSwitch();
     const { options, className, activeValue, switchType, onValueChange } =
       switchState;
 
@@ -39,20 +35,12 @@ const SwitchContainer = React.forwardRef<HTMLDivElement, SwitchContainerProps>(
             console.log("reset called");
           },
           switch: (value: string) => {
-            console.log("value", value);
-
-            dispatch({ type: ActionType.SWITCH, text: value });
+            dispatch({ type: ActionType.SWITCH, value });
           },
         } as SwitchRef;
       },
       [dispatch]
     );
-
-    const activeIndex = React.useMemo(() => {
-      return options.findIndex(
-        (ele: RadioOptionConfig) => ele.value === activeValue
-      );
-    }, [options, activeValue]);
 
     const handleKeyDown = React.useCallback(
       (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -76,7 +64,7 @@ const SwitchContainer = React.forwardRef<HTMLDivElement, SwitchContainerProps>(
           // 分发切换动作
           dispatch({
             type: ActionType.SWITCH,
-            text: value,
+            value,
           });
 
           // 手动设置焦点到新的选项
@@ -87,15 +75,12 @@ const SwitchContainer = React.forwardRef<HTMLDivElement, SwitchContainerProps>(
       [activeValue, options, activeIndex, dispatch]
     );
 
-    /** 更新高亮位置 */
     const updateToggle = React.useCallback(() => {
       const selected = radioRefs.current[activeIndex];
       const container = containerRef.current;
       if (!selected || !container) return;
 
       const containerStyle = window.getComputedStyle(container);
-      const paddingLeft = parseFloat(containerStyle.paddingLeft);
-      const paddingTop = parseFloat(containerStyle.paddingTop);
       const borderLeft = parseFloat(containerStyle.borderLeftWidth);
       const borderTop = parseFloat(containerStyle.borderTopWidth);
 
@@ -107,14 +92,17 @@ const SwitchContainer = React.forwardRef<HTMLDivElement, SwitchContainerProps>(
       const highlighterWidth = selectedWidth - 2;
       const highlighterHeight = selectedHeight - 2;
 
-      // 计算居中位置：原位置 + 1px 的偏移量
-      const translateX = selected.offsetLeft - paddingLeft - borderLeft + 1;
-      const translateY = selected.offsetTop - paddingTop - borderTop + 1;
-
-      setHighlighterStyle({
-        height: highlighterHeight,
-        width: highlighterWidth,
-        transform: `translate(${translateX}px, ${translateY}px)`,
+      // 使用 left 和 top 进行定位，避免 transform 被覆盖
+      const left = selected.offsetLeft - borderLeft + 1;
+      const top = selected.offsetTop - borderTop + 1;
+      dispatch({
+        type: ActionType.HIGHLIGHTERSTYLE,
+        value: {
+          height: highlighterHeight,
+          width: highlighterWidth,
+          left: `${left}px`,
+          top: `${top}px`,
+        },
       });
     }, [activeIndex]);
 
@@ -142,7 +130,7 @@ const SwitchContainer = React.forwardRef<HTMLDivElement, SwitchContainerProps>(
         ref={containerRef}
         onKeyDown={handleKeyDown}
       >
-        <Highlighter highlighterStyle={highlighterStyle} />
+        <Highlighter />
         {options.map((ele: RadioOptionConfig, index: number) => (
           <SwitchItem
             ref={(el) => {

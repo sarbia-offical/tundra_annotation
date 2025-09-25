@@ -11,8 +11,9 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
-import { SelectGroupConfig, SelectOptionConfig } from "./SelectTypes";
+import { SelectOptionConfig } from "./SelectTypes";
 import { Check } from "lucide-react";
 
 interface SelectContentProps extends React.ComponentProps<"div"> {
@@ -37,6 +38,7 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
       setIsPopoverOpen,
       getWidthConstraints,
     } = useSelectContext();
+    const { t } = useTranslation();
     const effectiveHideSelectAll =
       selectType === "single" ? true : hideSelectAll;
 
@@ -69,7 +71,7 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
           <SelectInput />
           {filteredOptions.length === 0 ? (
             <div className="p-3 text-center text-sm">
-              {emptyIndicator || "未找到结果。"}
+              {emptyIndicator || t("i18n_No_results_Found")}
             </div>
           ) : (
             <CommandList
@@ -90,7 +92,9 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
                       selectedValues.length ===
                       getAllOptions().filter((opt) => !opt.disabled).length
                     }
-                    aria-label={`选择全部 ${getAllOptions().length} 个选项`}
+                    aria-label={`${t("i18n_Select_All")} ${
+                      getAllOptions().length
+                    } ${t("i18n_Select_unti")}`}
                     className="cursor-pointer"
                   >
                     <div
@@ -106,9 +110,11 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
                       <Check className="h-4 w-4 text-background" />
                     </div>
                     <span>
-                      (选择全部
+                      ({t("i18n_Select_All")}
                       {getAllOptions().length > 20
-                        ? ` - ${getAllOptions().length} 个选项`
+                        ? ` - ${getAllOptions().length} ${t(
+                            "i18n_Select_unti"
+                          )}`
                         : ""}
                       )
                     </span>

@@ -147,7 +147,7 @@ function App() {
     console.log("data", data);
   };
   return (
-    <div className={`w-[350px] h-[600px] p-4 bg-background dark`}>
+    <div className={`w-[370px] h-[600px] p-4 bg-background`}>
       <AppHeader />
       <Settings />
       {/* <form onSubmit={handleSubmit(onSubmit)}>
@@ -233,6 +233,17 @@ function App() {
           提交
         </Button>
       </form> */}
+      {/* <Switch
+        options={fruitOptions}
+        variant={"default"}
+        animationConfig={{
+          badgeAnimation: "wiggle",
+        }}
+        switchType={SwitchType.Vertical}
+        defaultValue={fruitOptions[0].value}
+        ref={switchRef}
+        onValueChange={() => {}}
+      /> */}
     </div>
   );
 }

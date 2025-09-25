@@ -3,6 +3,7 @@ import { CommandGroup, CommandItem } from "../command";
 import { useSelectContext } from "./SelectContext";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface OperateProps
   extends React.ComponentPropsWithoutRef<typeof CommandGroup> {}
@@ -11,6 +12,7 @@ const Operate = React.forwardRef<HTMLDivElement, OperateProps>(
   ({ className, ...props }, ref) => {
     const { selectedValues, handleClear, setIsPopoverOpen } =
       useSelectContext();
+    const { t } = useTranslation();
     return (
       <CommandGroup>
         <div
@@ -25,7 +27,7 @@ const Operate = React.forwardRef<HTMLDivElement, OperateProps>(
                 onSelect={handleClear}
                 className="flex-1 justify-center cursor-pointer"
               >
-                清除
+                {t("i18n_Clear")}
               </CommandItem>
               <Separator
                 orientation="vertical"
@@ -38,7 +40,7 @@ const Operate = React.forwardRef<HTMLDivElement, OperateProps>(
             onSelect={() => setIsPopoverOpen(false)}
             className="flex-1 justify-center cursor-pointer max-w-full"
           >
-            关闭
+            {t("i18n_Close")}
           </CommandItem>
         </div>
       </CommandGroup>

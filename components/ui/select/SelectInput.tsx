@@ -2,6 +2,7 @@ import { CommandInput } from "@/components/ui/command";
 import React from "react";
 import { useSelectContext } from "./SelectContext";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import { debounce } from "lodash";
 
 interface SelectInputProps
@@ -19,7 +20,7 @@ const SelectInput = React.forwardRef<HTMLInputElement, SelectInputProps>(
       setSelectedValues,
       onValueChange,
     } = useSelectContext();
-
+    const { t } = useTranslation();
     const handleInputKeyDown = React.useCallback(
       (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === "Enter") {
@@ -52,7 +53,7 @@ const SelectInput = React.forwardRef<HTMLInputElement, SelectInputProps>(
           <CommandInput
             ref={ref}
             className={cn(className)}
-            placeholder="搜索选项..."
+            placeholder={`${t("i18n_Search_Options")}`}
             onKeyDown={handleInputKeyDown}
             value={searchValue}
             onValueChange={handleValueChange}

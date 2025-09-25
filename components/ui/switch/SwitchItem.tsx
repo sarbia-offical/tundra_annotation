@@ -4,20 +4,44 @@ import { useSwitchContext, useSwitchDispatch } from "./SwitchContext";
 import { switchVariants } from "./SwitchVariants";
 import { cn } from "@/lib/utils";
 import { ActionType, RadioOptionConfig } from "./SwitchTypes";
+import { useTranslation } from "react-i18next";
+
 interface SwitchItemProps {
   className?: string;
   item: RadioOptionConfig;
 }
 const SwitchItem = React.forwardRef<HTMLDivElement, SwitchItemProps>(
   ({ className, item }, ref) => {
+    const { t } = useTranslation();
     const context = useSwitchContext();
     const dispatch = useSwitchDispatch();
     const { animation, animationConfig, getBadgeAnimationClass } = useSwitch();
     const badgeAnimationClass = getBadgeAnimationClass();
     const { variant, activeValue, onValueChange } = context;
+
     const isSelected = useMemo(
       () => activeValue === item.value,
       [activeValue, item.value]
+    );
+
+    const handleClick = React.useCallback(() => {
+      dispatch({
+        type: ActionType.SWITCH,
+        value: item.value,
+      });
+      onValueChange(item.value);
+    }, [item, dispatch, onValueChange]);
+
+    const handleHover = React.useCallback(
+      (value: boolean) => () => {
+        if (isSelected) {
+          dispatch({
+            type: ActionType.HOVER,
+            value,
+          });
+        }
+      },
+      [dispatch, isSelected]
     );
 
     const IconComponent = item?.icon;
@@ -33,14 +57,9 @@ const SwitchItem = React.forwardRef<HTMLDivElement, SwitchItemProps>(
           badgeAnimationClass
         )}
         aria-label={`${item.label} option`}
-        onClick={() => {
-          dispatch({
-            type: ActionType.SWITCH,
-            text: item.value,
-          });
-          onValueChange(item.value);
-        }}
-        {...(isSelected ? { "data-checked": true } : {})}
+        onClick={handleClick}
+        onMouseEnter={handleHover(true)}
+        onMouseLeave={handleHover(false)}
         style={{
           ...(item?.style ? { background: item?.style?.radioColor } : {}),
           animationDuration: `${
@@ -48,11 +67,12 @@ const SwitchItem = React.forwardRef<HTMLDivElement, SwitchItemProps>(
           }s`,
           animationDelay: `${animationConfig?.delay || 0}s`,
         }}
+        {...(isSelected ? { "data-checked": true } : {})}
       >
         {IconComponent && (
           <IconComponent
             className={cn(
-              "h-4 w-4 mr-1",
+              "h-4 w-4 mr-2",
               item?.style?.iconColor && "text-current"
             )}
             {...(item?.style?.iconColor && {
@@ -60,7 +80,7 @@ const SwitchItem = React.forwardRef<HTMLDivElement, SwitchItemProps>(
             })}
           />
         )}
-        {item.label}
+        {t(item.label)}
       </div>
     );
   }
