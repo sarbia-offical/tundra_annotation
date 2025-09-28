@@ -8,7 +8,7 @@
     "i18n_CLOSE": "关闭",
     "i18n_LIGHT": "明亮",
     "i18n_DARK": "黑暗",
-    "i18n_CHINESE": "中文",
+    "i18n_CHINESE": "简体中文",
     "i18n_ENGLISH": "英文",
     "i18n_FONT_DISPLAY_DEFAULT": "默认",
     "i18n_FONT_DISPLAY_BOLD": "加粗",
@@ -23,5 +23,15 @@
     "i18n_Select_All": "选择全部",
     "i18n_Select_unti": "个选项",
     "i18n_Search_Options": "搜索选项...",
-    "i18n_Search_More": "更多"
+    "i18n_Search_More": "更多",
+    "i18n_System_Language": "系统语言",
+    "i18n_System_English": "English",
+    "i18n_System_Chinese": "简体中文",
+    "i18n_Translation_Service": "翻译服务",
+    "i18n_Microsoft_Translator": "微软翻译",
+    "i18n_Google_Translator": "谷歌翻译",
+    "i18n_Xiaoniu_Translator": "小牛翻译",
+    "i18n_Youdao_Translator": "有道翻译",
+    "i18n_Tencent_Translator": "腾讯翻译",
+    "i18n_OpenAI_Translator": "OpenAI"
 }

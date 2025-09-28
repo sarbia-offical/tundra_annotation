@@ -21,6 +21,11 @@ export enum FONT_DISPLAY {
   ITALIC = "font_display_italic",
 }
 
+export enum SYSTEM_LANGUAGE {
+  EN = "en",
+  ZH_CN = "zh_cn",
+}
+
 export const FONT_GROUP = "font_display";
 
 export const FONT_UNDERLINE = "font_underline";
@@ -35,7 +40,11 @@ type SettingKeys =
   | "THEME"
   | "TO"
   | "FONT_DISPLAY"
-  | "UNDERLINE_DISPLAY";
+  | "UNDERLINE_DISPLAY"
+  | "SYSTEM_ROLE"
+  | "USER_ROLE"
+  | "TRANSLATION_SERVICES"
+  | "SYSTEM_LANGUAGE";
 
 export interface IOption {
   label: string;
@@ -47,6 +56,15 @@ export interface IOption {
 }
 
 type OptionList = Record<SettingKeys, IOption[]>;
+
+export const services = {
+  microsoft: "microsoft",
+  google: "google",
+  xiaoniu: "xiaoniu",
+  youdao: "youdao",
+  tencent: "tencent",
+  openai: "openai",
+};
 
 export const options: OptionList = {
   // 插件状态
@@ -80,7 +98,7 @@ export const options: OptionList = {
     {
       label: "i18n_CHINESE",
       value: TO.CHINESE,
-      icon: Icons.languages,
+      icon: Icons.globe,
     },
     {
       label: "i18n_ENGLISH",
@@ -111,7 +129,6 @@ export const options: OptionList = {
       group: FONT_GROUP,
       icon: Icons.italic,
     },
-    // 下划线
   ],
   // 下划线展示
   UNDERLINE_DISPLAY: [
@@ -130,6 +147,53 @@ export const options: OptionList = {
       icon: Icons.waves,
     },
   ],
+  SYSTEM_ROLE: [],
+  USER_ROLE: [],
+  // 翻译服务
+  TRANSLATION_SERVICES: [
+    {
+      label: "i18n_Microsoft_Translator",
+      value: services.microsoft,
+      icon: Icons.languages,
+    },
+    {
+      label: "i18n_Google_Translator",
+      value: services.google,
+      icon: Icons.languages,
+    },
+    {
+      label: "i18n_Xiaoniu_Translator",
+      value: services.xiaoniu,
+      icon: Icons.languages,
+    },
+    {
+      label: "i18n_Youdao_Translator",
+      value: services.youdao,
+      icon: Icons.languages,
+    },
+    {
+      label: "i18n_Tencent_Translator",
+      value: services.tencent,
+      icon: Icons.languages,
+    },
+    {
+      label: "i18n_OpenAI_Translator",
+      value: services.openai,
+      icon: Icons.languages,
+    },
+  ],
+  SYSTEM_LANGUAGE: [
+    {
+      label: "i18n_System_Chinese",
+      value: SYSTEM_LANGUAGE.ZH_CN,
+      icon: Icons.earth,
+    },
+    {
+      label: "i18n_System_English",
+      value: SYSTEM_LANGUAGE.EN,
+      icon: Icons.earth,
+    },
+  ],
 };
 
 export const defaultOptions: Record<SettingKeys, string> = {
@@ -138,6 +202,11 @@ export const defaultOptions: Record<SettingKeys, string> = {
   TO: TO.ENGLISH,
   FONT_DISPLAY: FONT_DISPLAY.DEFAULT,
   UNDERLINE_DISPLAY: UNDERLINE_DISPLAY.WAVY,
+  SYSTEM_ROLE: "You are a professional, authentic machine translation engine.",
+  USER_ROLE: `Translate the following text into {{to}}, If translation is unnecessary (e.g. proper nouns, codes, etc.), return the original text. NO explanations. NO notes:
+{{origin}}`,
+  TRANSLATION_SERVICES: services.google,
+  SYSTEM_LANGUAGE: SYSTEM_LANGUAGE.EN,
 };
 
 /**

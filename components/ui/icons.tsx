@@ -49,6 +49,7 @@ import {
   Waves,
   Highlighter,
   RotateCcw,
+  Earth,
 } from "lucide-react";
 
 export const Icons = {
@@ -101,6 +102,7 @@ export const Icons = {
   waves: Waves,
   highlighter: Highlighter,
   rotateCcw: RotateCcw,
+  earth: Earth,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

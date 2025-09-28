@@ -147,7 +147,7 @@ function App() {
     console.log("data", data);
   };
   return (
-    <div className={`w-[370px] h-[600px] p-4 bg-background`}>
+    <div className={`w-[350px] min-h-[600px] p-4 bg-background`}>
       <AppHeader />
       <Settings />
       {/* <form onSubmit={handleSubmit(onSubmit)}>

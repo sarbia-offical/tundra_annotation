@@ -28,6 +28,8 @@ type FormValues = {
   to: string;
   font_display: string;
   underline_display: string;
+  translation_service: string;
+  system_language: string;
 };
 
 const Settings = ({ className, children }: SettingsProps) => {
@@ -35,9 +37,11 @@ const Settings = ({ className, children }: SettingsProps) => {
   const defaultValues = {
     status: defaultOptions.STATUS,
     theme: defaultOptions.THEME,
+    translation_service: defaultOptions.TRANSLATION_SERVICES,
     to: defaultOptions.TO,
     font_display: defaultOptions.FONT_DISPLAY,
     underline_display: defaultOptions.UNDERLINE_DISPLAY,
+    system_language: defaultOptions.SYSTEM_LANGUAGE,
   };
   const form = useForm<FormValues>({
     defaultValues: defaultValues,
@@ -85,6 +89,51 @@ const Settings = ({ className, children }: SettingsProps) => {
                     animationConfig={{
                       badgeAnimation: "bounce",
                     }}
+                    searchable={false}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="system_language"
+            render={({ field }) => (
+              <FormItem className="mb-2">
+                <FormLabel>{t("i18n_System_Language")}</FormLabel>
+                <FormControl>
+                  <Select
+                    options={options.SYSTEM_LANGUAGE}
+                    selectType="single"
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                    animationConfig={{
+                      badgeAnimation: "bounce",
+                    }}
+                    searchable={false}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="translation_service"
+            render={({ field }) => (
+              <FormItem className="mb-2">
+                <FormLabel>{t("i18n_Translation_Service")}</FormLabel>
+                <FormControl>
+                  <Select
+                    options={options.TRANSLATION_SERVICES}
+                    selectType="single"
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                    animationConfig={{
+                      badgeAnimation: "bounce",
+                    }}
+                    searchable={false}
                   />
                 </FormControl>
                 <FormMessage />
@@ -106,6 +155,7 @@ const Settings = ({ className, children }: SettingsProps) => {
                     animationConfig={{
                       badgeAnimation: "bounce",
                     }}
+                    searchable={false}
                   />
                 </FormControl>
                 <FormMessage />
@@ -127,6 +177,7 @@ const Settings = ({ className, children }: SettingsProps) => {
                     animationConfig={{
                       badgeAnimation: "bounce",
                     }}
+                    searchable={false}
                   />
                 </FormControl>
                 <FormMessage />
@@ -148,6 +199,7 @@ const Settings = ({ className, children }: SettingsProps) => {
                     animationConfig={{
                       badgeAnimation: "bounce",
                     }}
+                    searchable={false}
                   />
                 </FormControl>
                 <FormMessage />
