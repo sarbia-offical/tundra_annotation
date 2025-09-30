@@ -33,5 +33,6 @@
     "i18n_Xiaoniu_Translator": "小牛翻译",
     "i18n_Youdao_Translator": "有道翻译",
     "i18n_Tencent_Translator": "腾讯翻译",
-    "i18n_OpenAI_Translator": "OpenAI"
+    "i18n_OpenAI_Translator": "OpenAI",
+    "i18n_Selected_Message": "{{num}}个选项被选中"
 }

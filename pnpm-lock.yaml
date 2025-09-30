@@ -47,6 +47,9 @@ importers:
       i18next-resources-to-backend:
         specifier: ^1.2.1
         version: 1.2.1
+      immer:
+        specifier: ^10.1.3
+        version: 10.1.3
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -1708,6 +1711,9 @@ packages:
 
   immediate@3.0.6:
     resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==, tarball: https://registry.npmmirror.com/immediate/-/immediate-3.0.6.tgz}
+
+  immer@10.1.3:
+    resolution: {integrity: sha512-tmjF/k8QDKydUlm3mZU+tjM6zeq9/fFpPqH9SzWmBnVVKsPBg/V66qsMwb3/Bo90cgUN+ghdVBess+hPsxUyRw==, tarball: https://registry.npmmirror.com/immer/-/immer-10.1.3.tgz}
 
   import-meta-resolve@4.2.0:
     resolution: {integrity: sha512-Iqv2fzaTQN28s/FwZAoFq0ZSs/7hMAHJVX+w8PZl3cY19Pxk6jFFalxQoIfW2826i/fDLXv8IiEZRIT0lDuWcg==, tarball: https://registry.npmmirror.com/import-meta-resolve/-/import-meta-resolve-4.2.0.tgz}
@@ -4416,6 +4422,8 @@ snapshots:
   ieee754@1.2.1: {}
 
   immediate@3.0.6: {}
+
+  immer@10.1.3: {}
 
   import-meta-resolve@4.2.0: {}
 

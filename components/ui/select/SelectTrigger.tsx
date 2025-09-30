@@ -75,7 +75,7 @@ const SelectTrigger = React.forwardRef<
               className={cn(
                 "flex gap-2 items-center",
                 singleLine
-                  ? "overflow-x-auto multiselect-singleline-scroll"
+                  ? "overflow-x-auto select-singleline-scroll"
                   : "flex-wrap",
                 responsiveSettings.compactMode && "gap-0.5"
               )}

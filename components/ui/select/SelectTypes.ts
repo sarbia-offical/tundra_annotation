@@ -90,7 +90,6 @@ export interface BaseSelectProps
   minWidth?: string;
   maxWidth?: string;
   deduplicateOptions?: boolean;
-  resetOnDefaultValueChange?: boolean;
   closeOnSelect?: boolean;
 }
 

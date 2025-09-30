@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import React from "react";
 import { SwitchType } from "@/components/ui/switch/SwitchTypes";
 import { Button } from "@/components/ui/button";
+import { useDisplaySettings, useTheme } from "@/store/store.hooks";
 
 interface SettingsProps extends React.ComponentProps<"div"> {
   className?: string;
@@ -26,29 +27,44 @@ type FormValues = {
   status: string;
   theme: string;
   to: string;
-  font_display: string;
-  underline_display: string;
-  translation_service: string;
-  system_language: string;
+  fontDisplay: string;
+  underlineDisplay: string;
+  translationServices: string;
+  systemLanguage: string;
 };
 
 const Settings = ({ className, children }: SettingsProps) => {
   const { t } = useTranslation();
-  const defaultValues = {
-    status: defaultOptions.STATUS,
-    theme: defaultOptions.THEME,
-    translation_service: defaultOptions.TRANSLATION_SERVICES,
-    to: defaultOptions.TO,
-    font_display: defaultOptions.FONT_DISPLAY,
-    underline_display: defaultOptions.UNDERLINE_DISPLAY,
-    system_language: defaultOptions.SYSTEM_LANGUAGE,
-  };
+  const { defaultConfiguration, isInitialized } = useDisplaySettings();
+  const defaultValues = useMemo(
+    () => defaultConfiguration,
+    [defaultConfiguration]
+  );
+
   const form = useForm<FormValues>({
     defaultValues: defaultValues,
   });
+
   const onSubmit = (data: FormValues) => {
     console.log("data", data);
   };
+  useEffect(() => {
+    if (isInitialized) {
+      form.reset(defaultValues);
+    }
+  }, [isInitialized, defaultValues]);
+  if (!isInitialized) {
+    return (
+      <div
+        className={cn(
+          "text-foreground flex items-center justify-center h-40",
+          className
+        )}
+      >
+        <div>{t("i18n_Loading")}...</div>
+      </div>
+    );
+  }
   return (
     <div className={cn("text-foreground", className)}>
       <Form {...form}>
@@ -98,7 +114,7 @@ const Settings = ({ className, children }: SettingsProps) => {
           />
           <FormField
             control={form.control}
-            name="system_language"
+            name="systemLanguage"
             render={({ field }) => (
               <FormItem className="mb-2">
                 <FormLabel>{t("i18n_System_Language")}</FormLabel>
@@ -120,7 +136,7 @@ const Settings = ({ className, children }: SettingsProps) => {
           />
           <FormField
             control={form.control}
-            name="translation_service"
+            name="translationServices"
             render={({ field }) => (
               <FormItem className="mb-2">
                 <FormLabel>{t("i18n_Translation_Service")}</FormLabel>
@@ -164,7 +180,7 @@ const Settings = ({ className, children }: SettingsProps) => {
           />
           <FormField
             control={form.control}
-            name="font_display"
+            name="fontDisplay"
             render={({ field }) => (
               <FormItem className="mb-2">
                 <FormLabel>{t("i18n_Text_Style")}</FormLabel>
@@ -186,7 +202,7 @@ const Settings = ({ className, children }: SettingsProps) => {
           />
           <FormField
             control={form.control}
-            name="underline_display"
+            name="underlineDisplay"
             render={({ field }) => (
               <FormItem className="mb-4">
                 <FormLabel>{t("i18n_Underline_Style")}</FormLabel>

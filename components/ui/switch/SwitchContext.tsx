@@ -1,4 +1,4 @@
-import React, { createContext, Dispatch } from "react";
+import React, { createContext, Dispatch, useReducer } from "react";
 import {
   SwitchState,
   Action,

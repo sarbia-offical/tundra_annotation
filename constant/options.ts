@@ -11,7 +11,7 @@ export enum THEME {
 }
 
 export enum TO {
-  CHINESE = "zh-Hans",
+  CHINESE = "zh_cn",
   ENGLISH = "en",
 }
 
@@ -24,6 +24,15 @@ export enum FONT_DISPLAY {
 export enum SYSTEM_LANGUAGE {
   EN = "en",
   ZH_CN = "zh_cn",
+}
+
+export enum SERVICES {
+  MICROSOFT = "microsoft",
+  GOOGLE = "google",
+  XIAONIU = "xiaoniu",
+  YOUDAO = "youdao",
+  TENCENT = "tencent",
+  OPENAI = "openai",
 }
 
 export const FONT_GROUP = "font_display";
@@ -56,15 +65,6 @@ export interface IOption {
 }
 
 type OptionList = Record<SettingKeys, IOption[]>;
-
-export const services = {
-  microsoft: "microsoft",
-  google: "google",
-  xiaoniu: "xiaoniu",
-  youdao: "youdao",
-  tencent: "tencent",
-  openai: "openai",
-};
 
 export const options: OptionList = {
   // 插件状态
@@ -153,32 +153,32 @@ export const options: OptionList = {
   TRANSLATION_SERVICES: [
     {
       label: "i18n_Microsoft_Translator",
-      value: services.microsoft,
+      value: SERVICES.MICROSOFT,
       icon: Icons.languages,
     },
     {
       label: "i18n_Google_Translator",
-      value: services.google,
+      value: SERVICES.GOOGLE,
       icon: Icons.languages,
     },
     {
       label: "i18n_Xiaoniu_Translator",
-      value: services.xiaoniu,
+      value: SERVICES.XIAONIU,
       icon: Icons.languages,
     },
     {
       label: "i18n_Youdao_Translator",
-      value: services.youdao,
+      value: SERVICES.YOUDAO,
       icon: Icons.languages,
     },
     {
       label: "i18n_Tencent_Translator",
-      value: services.tencent,
+      value: SERVICES.TENCENT,
       icon: Icons.languages,
     },
     {
       label: "i18n_OpenAI_Translator",
-      value: services.openai,
+      value: SERVICES.OPENAI,
       icon: Icons.languages,
     },
   ],
@@ -205,7 +205,7 @@ export const defaultOptions: Record<SettingKeys, string> = {
   SYSTEM_ROLE: "You are a professional, authentic machine translation engine.",
   USER_ROLE: `Translate the following text into {{to}}, If translation is unnecessary (e.g. proper nouns, codes, etc.), return the original text. NO explanations. NO notes:
 {{origin}}`,
-  TRANSLATION_SERVICES: services.google,
+  TRANSLATION_SERVICES: SERVICES.GOOGLE,
   SYSTEM_LANGUAGE: SYSTEM_LANGUAGE.EN,
 };
 

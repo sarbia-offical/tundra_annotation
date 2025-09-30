@@ -33,5 +33,6 @@
     "i18n_Xiaoniu_Translator": "Xiaoniu",
     "i18n_Youdao_Translator": "Youdao",
     "i18n_Tencent_Translator": "Tencent",
-    "i18n_OpenAI_Translator": "OpenAI"
+    "i18n_OpenAI_Translator": "OpenAI",
+    "i18n_Selected_Message": "{{num}} elements have been selected"
 }

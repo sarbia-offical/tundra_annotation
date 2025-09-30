@@ -1,10 +1,11 @@
-import { defaultOptions, services } from "./options";
+import { defaultOptions, SERVICES } from "./options";
 
 interface Mapping {
   [key: string]: string;
 }
 
-export class Config {
+// ===== 配置定义 =====
+export interface Config {
   status: string;
   theme: string;
   to: string;
@@ -13,21 +14,25 @@ export class Config {
   system_role: Mapping;
   user_role: Mapping;
   translation_services: string;
-  constructor() {
-    this.status = defaultOptions.STATUS;
-    this.theme = defaultOptions.THEME;
-    this.to = defaultOptions.TO;
-    this.font_display = defaultOptions.FONT_DISPLAY;
-    this.underline_display = defaultOptions.FONT_DISPLAY;
-    this.system_role = contextFactory(defaultOptions.SYSTEM_ROLE);
-    this.user_role = contextFactory(defaultOptions.USER_ROLE);
-    this.translation_services = services.google;
-  }
+  system_language: string;
 }
+
+// 工厂函数：生成默认配置
+export const createConfig = (): Config => ({
+  status: defaultOptions.STATUS,
+  theme: defaultOptions.THEME,
+  to: defaultOptions.TO,
+  font_display: defaultOptions.FONT_DISPLAY,
+  underline_display: defaultOptions.UNDERLINE_DISPLAY,
+  system_role: contextFactory(defaultOptions.SYSTEM_ROLE),
+  user_role: contextFactory(defaultOptions.USER_ROLE),
+  translation_services: SERVICES.GOOGLE,
+  system_language: defaultOptions.SYSTEM_LANGUAGE,
+});
 
 const contextFactory = (str: string): Mapping => {
   let systems_role: Mapping = {};
-  Object.keys(services).forEach((key) => {
+  Object.values(SERVICES).forEach((key) => {
     systems_role[key] = str;
   });
   return systems_role;

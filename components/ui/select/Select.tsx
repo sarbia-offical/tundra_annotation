@@ -5,11 +5,12 @@ import { SelectProvider } from "./SelectContext";
 import { SelectTrigger } from "./SelectTrigger";
 import { SelectContent } from "./SelectContent";
 import { Popover } from "@radix-ui/react-popover";
+import { useTranslation } from "react-i18next";
 
 const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
   const [politeMessage, setPoliteMessage] = React.useState("");
-  const [assertiveMessage, setAssertiveMessage] = React.useState("");
   const contextValue = useSelect(props);
+  const { t } = useTranslation();
   const {
     selectedValues,
     isPopoverOpen,
@@ -24,22 +25,12 @@ const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
     onValueChange,
   } = contextValue;
 
-  const announce = React.useCallback(
-    (message: string, priority: "polite" | "assertive" = "polite") => {
-      if (priority === "assertive") {
-        setAssertiveMessage(message);
-        setTimeout(() => {
-          setAssertiveMessage("");
-        });
-      } else {
-        setPoliteMessage(message);
-        setTimeout(() => {
-          setPoliteMessage("");
-        });
-      }
-    },
-    []
-  );
+  const announce = React.useCallback((message: string) => {
+    setPoliteMessage(message);
+    setTimeout(() => {
+      setPoliteMessage("");
+    }, 2000);
+  }, []);
   React.useImperativeHandle(
     ref,
     () => ({
@@ -63,14 +54,15 @@ const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {
     }),
     [contextValue, props.defaultValue]
   );
+  useEffect(() => {
+    const selectedCount = selectedValues.length;
+    announce(t("i18n_Selected_Message", { num: selectedCount }));
+  }, [selectedValues]);
   return (
     <SelectProvider value={contextValue}>
       <div className="sr-only">
         <div aria-live="polite" aria-atomic="true" role="status">
           {politeMessage}
-        </div>
-        <div aria-live="assertive" aria-atomic="true" role="alert">
-          {assertiveMessage}
         </div>
       </div>
       <Popover
