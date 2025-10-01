@@ -30,9 +30,8 @@
 - ✅ **Shadcn UI**: [Shadcn UI](https://ui.shadcn.com)
 - ✅ **Zustand**: [Zustand](https://zustand-demo.pmnd.rs)
 <p align="center">
-  <img src="./md/image-2.png" alt="Tundra annotation"/>
-  <img src="./md/image-3.png" alt="Tundra annotation"/>
-  <img src="./md/image-4.png" height="300" alt="Tundra annotation"/>
+  <img src="./md/image-5.png" alt="Tundra annotation"/>
+  <img src="./md/image-6.png" alt="Tundra annotation"/>
 </p>
 
 ## 📦 Running chrome extension
@@ -53,98 +52,13 @@ pnpm run dev
 
 When you have completed these steps, `WXT` will help you open new tabs
 
-<p align="center">
-  <img src="./md/Function_recording3.gif" alt="Tundra annotation"/>
-</p>
-
-## 💼 Packages
-
-```
-.
-├── assets
-│   ├── avatar.jpg
-│   ├── empty.webp
-│   ├── font.css
-│   ├── main.css
-│   ├── react.svg
-│   └── underConstruction.webp
-├── components
-│   ├── chatBubble
-│   ├── collapsePanel
-│   ├── dotMatrix
-│   ├── edgeSnapDraggable
-│   ├── i18Config.ts
-│   ├── i18n.ts
-│   ├── icons
-│   ├── settings
-│   ├── skeletonLoader
-│   └── ui
-├── components.json
-├── entrypoints
-│   ├── background.ts
-│   ├── content
-│   ├── popup
-│   ├── sidebar.tsx
-│   ├── sidepanel
-│   └── type.ts
-├── hooks
-│   ├── useMobile.tsx
-│   ├── useStorage.tsx
-│   └── useStorage.type.ts
-├── lib
-│   ├── Marks
-│   ├── SelectionObserver.ts
-│   ├── Utils.ts
-│   └── ZodValidator.ts
-├── locales
-│   ├── en
-│   └── zh_CN
-├── md
-│   ├── image-2.png
-│   ├── image-3.png
-│   ├── image-4.png
-│   └── image.png
-├── package.json
-├── pnpm-lock.yaml
-├── postcss.config.js
-├── public
-│   ├── _locales
-│   ├── icon
-│   └── wxt.svg
-├── README.md
-├── services
-│   ├── api.ts
-│   ├── api.type.ts
-│   └── services.ts
-├── state
-│   ├── constant.ts
-│   ├── hooks.ts
-│   ├── index.tsx
-│   ├── store.ts
-│   └── type.ts
-├── tailwind.config.js
-├── tsconfig.json
-└── wxt.config.ts
-```
-
 ## 📦 Building chrome extension
 
 ```
 pnpm run build
 ```
 
-## 👀 Considerations
-
-The `services.ts` file contains mock data, which can be modified by yourself
-
-```
-├── services
-│   ├── api.ts
-│   ├── api.type.ts
-│   └── services.ts
-```
-
-## Project Refactoring
+## 🏗️ Project Refactoring
 
 ### Select Component properties
 
