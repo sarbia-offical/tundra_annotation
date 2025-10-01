@@ -4,6 +4,11 @@ import App from "./App.tsx";
 import "@/assets/tailwind.css";
 import initTranslations from "@/lib/i18n.ts";
 import { i18nConfig } from "@/lib/i18nType.ts";
+import { StoreProvider } from "@/store/store.context";
 
 initTranslations(i18nConfig.defaultLocale, ["common", "popup"]);
-ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <StoreProvider>
+    <App />
+  </StoreProvider>
+);

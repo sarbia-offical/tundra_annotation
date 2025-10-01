@@ -11,7 +11,7 @@ export enum THEME {
 }
 
 export enum TO {
-  CHINESE = "zh_cn",
+  CHINESE = "zh_CN",
   ENGLISH = "en",
 }
 
@@ -23,7 +23,7 @@ export enum FONT_DISPLAY {
 
 export enum SYSTEM_LANGUAGE {
   EN = "en",
-  ZH_CN = "zh_cn",
+  ZH_CN = "zh_CN",
 }
 
 export enum SERVICES {

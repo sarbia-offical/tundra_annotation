@@ -28,6 +28,7 @@ const SelectTrigger = React.forwardRef<
     animationConfig,
     variant,
     screenSize,
+    deleteAll,
     getResponsiveConfig,
     getBadgeAnimationClass,
     getWidthConstraints,
@@ -198,25 +199,29 @@ const SelectTrigger = React.forwardRef<
             </div>
             <div className="flex items-center justify-between">
               {/* 全部删除和下拉展开逻辑 */}
-              <div
-                role="button"
-                tabIndex={0}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  handleClear();
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
+              {deleteAll ? (
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={(event) => {
                     event.stopPropagation();
                     handleClear();
-                  }
-                }}
-                aria-label={`清除所有 ${selectedValues.length} 个已选选项`}
-                className="flex items-center justify-center h-4 w-4 mx-2 cursor-pointer text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded-sm"
-              >
-                <XIcon className="h-4 w-4" />
-              </div>
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      handleClear();
+                    }
+                  }}
+                  aria-label={`清除所有 ${selectedValues.length} 个已选选项`}
+                  className="flex items-center justify-center h-4 w-4 mx-2 cursor-pointer text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded-sm"
+                >
+                  <XIcon className="h-4 w-4" />
+                </div>
+              ) : (
+                <></>
+              )}
               <Separator
                 orientation="vertical"
                 className="flex min-h-6 h-full"

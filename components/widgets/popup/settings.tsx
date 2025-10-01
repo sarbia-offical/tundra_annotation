@@ -1,5 +1,12 @@
 import { cn } from "@/lib/utils";
-import { options, defaultOptions } from "@/constant/options";
+import {
+  options,
+  STATUS,
+  THEME,
+  SYSTEM_LANGUAGE,
+  FONT_DISPLAY,
+  UNDERLINE_DISPLAY,
+} from "@/constant/options";
 import { Select } from "@/components/ui/select/index";
 import { Switch } from "@/components/ui/switch/index";
 import { Separator } from "@/components/ui/separator";
@@ -17,7 +24,9 @@ import { useForm } from "react-hook-form";
 import React from "react";
 import { SwitchType } from "@/components/ui/switch/SwitchTypes";
 import { Button } from "@/components/ui/button";
-import { useDisplaySettings, useTheme } from "@/store/store.hooks";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
+import { useDisplaySettings } from "@/store/store.hooks";
 
 interface SettingsProps extends React.ComponentProps<"div"> {
   className?: string;
@@ -26,16 +35,26 @@ interface SettingsProps extends React.ComponentProps<"div"> {
 type FormValues = {
   status: string;
   theme: string;
-  to: string;
   fontDisplay: string;
   underlineDisplay: string;
-  translationServices: string;
   systemLanguage: string;
 };
 
 const Settings = ({ className, children }: SettingsProps) => {
   const { t } = useTranslation();
-  const { defaultConfiguration, isInitialized } = useDisplaySettings();
+  const {
+    defaultConfiguration,
+    isInitialized,
+    initialConfiguration,
+    setStatus,
+    setTheme,
+    setSystemLanguage,
+    setFontDisplay,
+    setUnderlineDisplay,
+    resetStorage,
+    updateStorage,
+  } = useDisplaySettings();
+
   const defaultValues = useMemo(
     () => defaultConfiguration,
     [defaultConfiguration]
@@ -44,9 +63,12 @@ const Settings = ({ className, children }: SettingsProps) => {
   const form = useForm<FormValues>({
     defaultValues: defaultValues,
   });
-
   const onSubmit = (data: FormValues) => {
-    console.log("data", data);
+    toast.success(t("i18n_Submit_Message"));
+    updateStorage({
+      ...initialConfiguration,
+      ...data,
+    });
   };
   useEffect(() => {
     if (isInitialized) {
@@ -79,7 +101,10 @@ const Settings = ({ className, children }: SettingsProps) => {
                   <Switch
                     options={options.STATUS}
                     defaultValue={field.value}
-                    onValueChange={field.onChange}
+                    onValueChange={(value: string) => {
+                      setStatus(value as STATUS);
+                      field.onChange(value);
+                    }}
                     animationConfig={{
                       badgeAnimation: "bounce",
                     }}
@@ -101,11 +126,15 @@ const Settings = ({ className, children }: SettingsProps) => {
                     options={options.THEME}
                     selectType="single"
                     defaultValue={field.value}
-                    onValueChange={field.onChange}
+                    onValueChange={(value: string[]) => {
+                      setTheme(value[0] as THEME);
+                      field.onChange(value);
+                    }}
                     animationConfig={{
                       badgeAnimation: "bounce",
                     }}
                     searchable={false}
+                    deleteAll={false}
                   />
                 </FormControl>
                 <FormMessage />
@@ -123,55 +152,15 @@ const Settings = ({ className, children }: SettingsProps) => {
                     options={options.SYSTEM_LANGUAGE}
                     selectType="single"
                     defaultValue={field.value}
-                    onValueChange={field.onChange}
+                    onValueChange={(value: string[]) => {
+                      setSystemLanguage(value[0] as SYSTEM_LANGUAGE);
+                      field.onChange(value);
+                    }}
                     animationConfig={{
                       badgeAnimation: "bounce",
                     }}
                     searchable={false}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="translationServices"
-            render={({ field }) => (
-              <FormItem className="mb-2">
-                <FormLabel>{t("i18n_Translation_Service")}</FormLabel>
-                <FormControl>
-                  <Select
-                    options={options.TRANSLATION_SERVICES}
-                    selectType="single"
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                    animationConfig={{
-                      badgeAnimation: "bounce",
-                    }}
-                    searchable={false}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="to"
-            render={({ field }) => (
-              <FormItem className="mb-2">
-                <FormLabel>{t("i18n_Target")}</FormLabel>
-                <FormControl>
-                  <Select
-                    options={options.TO}
-                    selectType="single"
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                    animationConfig={{
-                      badgeAnimation: "bounce",
-                    }}
-                    searchable={false}
+                    deleteAll={false}
                   />
                 </FormControl>
                 <FormMessage />
@@ -189,11 +178,15 @@ const Settings = ({ className, children }: SettingsProps) => {
                     options={options.FONT_DISPLAY}
                     selectType="single"
                     defaultValue={field.value}
-                    onValueChange={field.onChange}
+                    onValueChange={(value: string[]) => {
+                      setFontDisplay(value[0] as FONT_DISPLAY);
+                      field.onChange(value);
+                    }}
                     animationConfig={{
                       badgeAnimation: "bounce",
                     }}
                     searchable={false}
+                    deleteAll={false}
                   />
                 </FormControl>
                 <FormMessage />
@@ -211,11 +204,15 @@ const Settings = ({ className, children }: SettingsProps) => {
                     options={options.UNDERLINE_DISPLAY}
                     selectType="single"
                     defaultValue={field.value}
-                    onValueChange={field.onChange}
+                    onValueChange={(value: string[]) => {
+                      setUnderlineDisplay(value[0] as UNDERLINE_DISPLAY);
+                      field.onChange(value);
+                    }}
                     animationConfig={{
                       badgeAnimation: "bounce",
                     }}
                     searchable={false}
+                    deleteAll={false}
                   />
                 </FormControl>
                 <FormMessage />
@@ -229,11 +226,13 @@ const Settings = ({ className, children }: SettingsProps) => {
               {t("i18n_Submit")}
             </Button>
             <Button
-              variant={"outline"}
               className="flex-1"
+              variant={"outline"}
               type="reset"
               onClick={() => {
-                form.reset(defaultValues);
+                if (initialConfiguration) {
+                  resetStorage(initialConfiguration);
+                }
               }}
             >
               <RotateCcw className="mr-2" />
@@ -242,6 +241,7 @@ const Settings = ({ className, children }: SettingsProps) => {
           </div>
         </form>
       </Form>
+      <Toaster richColors position="top-center" duration={1000} />
       {children ? children : <></>}
     </div>
   );

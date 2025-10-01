@@ -91,6 +91,7 @@ export interface BaseSelectProps
   maxWidth?: string;
   deduplicateOptions?: boolean;
   closeOnSelect?: boolean;
+  deleteAll?: boolean;
 }
 
 // 单选
@@ -152,6 +153,7 @@ export interface SelectContextValue extends BaseSelectProps {
   selectedCountId: string;
   isSingleSelect: boolean;
   filteredOptions: SelectOptionConfig[] | SelectGroupConfig[];
+  deleteAll?: boolean;
   isGroupedOptions: (
     opts: SelectGroupConfig[] | SelectOptionConfig[]
   ) => opts is SelectGroupConfig[];

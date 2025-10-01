@@ -17,22 +17,26 @@ const storeReducer = produce((draft: Config, action: StoreAction) => {
       draft.status = action.payload;
       break;
     case "SET_THEME":
-      draft.theme = action.payload;
+      const theme = action.payload;
+      draft.theme = theme;
       break;
     case "SET_SYSTEM_LANGUAGE":
-      draft.system_language = action.payload;
+      draft.systemLanguage = action.payload;
       break;
     case "SET_TRANSLATION_SERVICE":
-      draft.translation_services = action.payload;
+      draft.translationServices = action.payload;
       break;
     case "SET_TRANSLATION_TARGET":
       draft.to = action.payload;
       break;
     case "SET_FONT_DISPLAY":
-      draft.font_display = action.payload;
+      draft.fontDisplay = action.payload;
       break;
     case "SET_UNDERLINE_DISPLAY":
-      draft.underline_display = action.payload;
+      draft.underlineDisplay = action.payload;
+      break;
+    case "UPDATE_STORAGE":
+      storage.setItem("local:Annotation_Config", action.payload);
       break;
     case "INIT_FROM_STORAGE":
       return {
@@ -49,6 +53,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   initialConfig = { ...createConfig() },
 }) => {
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  const [initialConfiguration, setInitialConfiguration] = useState<Config>();
   const [state, dispatch] = useReducer(storeReducer, initialConfig);
   const unWatchRef = useRef<Unwatch | null>(null);
   const skipNextStorageSync = useRef<boolean>(false);
@@ -59,25 +64,30 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
           const value = await storage.getItem<Config>(
             "local:Annotation_Config"
           );
+          let initialConfiguration: Config | null = null;
           if (value) {
             dispatch({
               type: "INIT_FROM_STORAGE",
               payload: value,
             });
+            initialConfiguration = value;
           } else {
+            initialConfiguration = initialConfig;
             await storage.setItem("local:Annotation_Config", initialConfig);
           }
           skipNextStorageSync.current = true;
+          setInitialConfiguration(initialConfiguration);
           return Promise.resolve(true);
         };
-        const initializeStatus = await initializeFromStorage();
+        const initialConfiguration = await initializeFromStorage();
 
-        if (initializeStatus) {
+        if (initialConfiguration) {
           setIsInitialized(true);
           unWatchRef.current = storage.watch<Config>(
             "local:Annotation_Config",
             (newValue?: Config | null) => {
               if (newValue) {
+                setInitialConfiguration(newValue);
                 dispatch({
                   type: "INIT_FROM_STORAGE",
                   payload: newValue,
@@ -95,7 +105,14 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   }, []);
 
   return (
-    <StoreContext.Provider value={{ state, dispatch, isInitialized }}>
+    <StoreContext.Provider
+      value={{
+        state,
+        dispatch,
+        isInitialized,
+        initialConfiguration,
+      }}
+    >
       {children}
     </StoreContext.Provider>
   );

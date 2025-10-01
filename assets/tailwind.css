@@ -84,6 +84,13 @@
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 /* Thin scrollbar for Single Line Mode in MultiSelect */

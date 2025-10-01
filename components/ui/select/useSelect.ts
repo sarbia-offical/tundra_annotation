@@ -33,6 +33,7 @@ export const useSelect = (props: SelectProps) => {
     responsive,
     deduplicateOptions = false,
     closeOnSelect = false,
+    deleteAll = true,
     onValueChange,
     variant,
   } = props;
@@ -310,6 +311,7 @@ export const useSelect = (props: SelectProps) => {
     singleLine,
     variant,
     filteredOptions,
+    deleteAll,
     isGroupedOptions,
     setSelectedValues,
     setSearchValue,

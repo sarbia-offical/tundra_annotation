@@ -31,9 +31,6 @@ const SwitchContainer = React.forwardRef<HTMLDivElement, SwitchContainerProps>(
         }
         return {
           ...containerRef.current,
-          reset: () => {
-            console.log("reset called");
-          },
           switch: (value: string) => {
             dispatch({ type: ActionType.SWITCH, value });
           },

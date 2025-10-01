@@ -9,11 +9,12 @@ export type StoreAction =
   | { type: "SET_UNDERLINE_DISPLAY"; payload: string }
   | { type: "SET_SYSTEM_LANGUAGE"; payload: string }
   | { type: "SET_STATUS"; payload: string }
-  | { type: "UPDATE_CONFIG"; payload: Partial<Config> }
+  | { type: "UPDATE_STORAGE"; payload: Partial<Config> }
   | { type: "INIT_FROM_STORAGE"; payload: Partial<Config> };
 
 export interface StoreContextType {
   state: Config;
   isInitialized: boolean;
+  initialConfiguration?: Config;
   dispatch: React.Dispatch<StoreAction>;
 }

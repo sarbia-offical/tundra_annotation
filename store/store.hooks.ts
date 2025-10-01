@@ -8,6 +8,7 @@ import {
   UNDERLINE_DISPLAY,
 } from "@/constant/options";
 import { useStore } from "./store.context";
+import { Config } from "@/constant/model";
 
 export const useTheme = () => {
   const { state, dispatch } = useStore();
@@ -34,7 +35,7 @@ export const useTheme = () => {
 };
 
 export const useDisplaySettings = () => {
-  const { state, dispatch, isInitialized } = useStore();
+  const { state, dispatch, isInitialized, initialConfiguration } = useStore();
 
   const setStatus = useCallback(
     (status: STATUS) => {
@@ -85,6 +86,20 @@ export const useDisplaySettings = () => {
     [dispatch]
   );
 
+  const resetStorage = useCallback(
+    (config: Partial<Config>) => {
+      dispatch({ type: "INIT_FROM_STORAGE", payload: config });
+    },
+    [dispatch]
+  );
+
+  const updateStorage = useCallback(
+    (config: Partial<Config>) => {
+      dispatch({ type: "UPDATE_STORAGE", payload: config });
+    },
+    [dispatch]
+  );
+
   const toggleStatus = useCallback(() => {
     const newStatus = state.status === STATUS.OPEN ? STATUS.CLOSE : STATUS.OPEN;
     setStatus(newStatus);
@@ -94,25 +109,22 @@ export const useDisplaySettings = () => {
     () => ({
       status: state.status,
       theme: state.theme,
-      systemLanguage: state.system_language,
-      translationServices: state.translation_services,
-      to: state.to,
-      fontDisplay: state.font_display,
-      underlineDisplay: state.underline_display,
+      systemLanguage: state.systemLanguage,
+      fontDisplay: state.fontDisplay,
+      underlineDisplay: state.underlineDisplay,
     }),
     [
       state.status,
       state.theme,
-      state.system_language,
-      state.translation_services,
-      state.to,
-      state.font_display,
-      state.underline_display,
+      state.systemLanguage,
+      state.fontDisplay,
+      state.underlineDisplay,
     ]
   );
   return {
     defaultConfiguration,
     isInitialized,
+    initialConfiguration,
     setStatus,
     setTheme,
     setSystemLanguage,
@@ -120,8 +132,9 @@ export const useDisplaySettings = () => {
     setTargetLanguage,
     setFontDisplay,
     setUnderlineDisplay,
+    resetStorage,
+    updateStorage,
     toggleStatus,
-
     isEnabled: state.status === STATUS.OPEN,
   };
 };
