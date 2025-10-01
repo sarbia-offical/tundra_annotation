@@ -143,3 +143,7 @@ The `services.ts` file contains mock data, which can be modified by yourself
 │   ├── api.type.ts
 │   └── services.ts
 ```
+
+## 🏗️ Project refactoring
+
+[refactoring branch](https://github.com/sarbia-offical/tundra_annotation/tree/refactor/v2)
