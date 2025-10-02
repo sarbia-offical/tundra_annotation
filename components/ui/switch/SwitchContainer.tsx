@@ -10,6 +10,7 @@ import {
 } from "./SwitchTypes";
 import { useSwitch } from "./useSwitch";
 import { Highlighter } from "./Highlighter";
+
 interface SwitchContainerProps {
   children?: React.ReactNode;
 }
@@ -105,15 +106,7 @@ const SwitchContainer = React.forwardRef<HTMLDivElement, SwitchContainerProps>(
 
     React.useEffect(() => {
       updateToggle();
-    }, [updateToggle]);
-
-    React.useEffect(() => {
-      const resizeObserver = new ResizeObserver(updateToggle);
-      if (containerRef.current) {
-        resizeObserver.observe(containerRef.current);
-      }
-      return () => resizeObserver.disconnect();
-    }, [updateToggle]);
+    }, [activeIndex]);
 
     return (
       <div
@@ -123,7 +116,7 @@ const SwitchContainer = React.forwardRef<HTMLDivElement, SwitchContainerProps>(
           switchType === SwitchType.Horizontal ? "flex" : "flex flex-col"
         )}
         role="radiogroup"
-        aria-label="Fancy switch options"
+        aria-label="switch options"
         ref={containerRef}
         onKeyDown={handleKeyDown}
       >

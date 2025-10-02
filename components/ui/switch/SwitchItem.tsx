@@ -26,6 +26,10 @@ const SwitchItem = React.forwardRef<HTMLDivElement, SwitchItemProps>(
 
     const handleClick = React.useCallback(() => {
       dispatch({
+        type: ActionType.HOVER,
+        value: false,
+      });
+      dispatch({
         type: ActionType.SWITCH,
         value: item.value,
       });

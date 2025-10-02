@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { useSwitchContext, useSwitchDispatch } from "./SwitchContext";
 import { switchVariants } from "./SwitchVariants";
-import { RadioOptionConfig } from "./SwitchTypes";
+import { ActionType, RadioOptionConfig } from "./SwitchTypes";
 const baseStyle: React.CSSProperties = {
   position: "absolute",
 };
@@ -12,6 +12,7 @@ interface HighlighterProps extends Partial<Omit<HTMLDivElement, "className">> {
 const Highlighter = React.forwardRef<HTMLDivElement, HighlighterProps>(
   ({ className }, ref) => {
     const context = useSwitchContext();
+    const dispatch = useSwitchDispatch();
     const { variant, options, activeValue, hoverState, highlighterStyle } =
       context;
     const activeItem = React.useMemo(
@@ -37,6 +38,14 @@ const Highlighter = React.forwardRef<HTMLDivElement, HighlighterProps>(
         data-highlighter
         data-checked
         ref={ref}
+        onTransitionEnd={(e) => {
+          if (e.propertyName === "left" || e.propertyName === "top") {
+            dispatch({
+              type: ActionType.HOVER,
+              value: true,
+            });
+          }
+        }}
       />
     );
   }

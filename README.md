@@ -32,6 +32,7 @@
 <p align="center">
   <img src="./md/image-5.png" alt="Tundra annotation"/>
   <img src="./md/image-6.png" alt="Tundra annotation"/>
+  <img src="./md/example.gif" alt="Tundra annotation"/>
 </p>
 
 ## 📦 Running chrome extension
@@ -227,7 +228,65 @@ const onSubmit = (data: FormValues) => {
 </form>;
 ```
 
-<p align="center">
-  <img src="./md/image-5.png" alt="Tundra annotation"/>
-  <img src="./md/image-6.png" alt="Tundra annotation"/>
-</p>
+## How to use the switch component in a form
+
+```
+<form onSubmit={form.handleSubmit(onSubmit)}>
+<FormField
+  control={form.control}
+  name="status"
+  render={({ field }) => (
+    <FormItem className="mb-2">
+      <FormLabel>{t("i18n_Plugin_Status")}</FormLabel>
+      <FormControl>
+        <Switch
+          options={options.STATUS}
+          defaultValue={field.value}
+          onValueChange={(value: string) => {
+          }}
+          animationConfig={{
+            badgeAnimation: "bounce",
+          }}
+          switchType={SwitchType.Horizontal}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+</form>
+```
+
+## Using switch component alone
+
+```
+const fruitOptions: RadioOptionConfig[] = [
+  {
+    label: "apple",
+    value: "a",
+    icon: Icons.clock,
+  },
+  {
+    label: "banana",
+    value: "b",
+    icon: Icons.dog,
+  },
+  {
+    label: "cocount",
+    value: "c",
+    icon: Icons.cat,
+  },
+];
+<Switch
+  options={fruitOptions}
+  variant={"default"}
+  animationConfig={{
+    badgeAnimation: "wiggle",
+  }}
+  switchType={SwitchType.Vertical}
+  defaultValue={fruitOptions[0].value}
+  onValueChange={() => {}}
+/>
+```
+
+</form>

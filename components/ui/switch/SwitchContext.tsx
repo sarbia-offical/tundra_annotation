@@ -14,7 +14,6 @@ const switchreducer = (state: SwitchState, action: Action): SwitchState => {
       return {
         ...state,
         activeValue: action.value,
-        hoverState: true,
       };
     case ActionType.HOVER:
       return {
@@ -58,7 +57,7 @@ export const SwitchProvider: React.FC<{
   const [state, dispatch] = useReducer(switchreducer, {
     ...value,
     activeValue: value.defaultValue,
-    hoverState: false,
+    hoverState: true,
     switchType: value?.switchType ? value.switchType : SwitchType.Horizontal,
     highlighterStyle: {
       height: 0,
