@@ -11,6 +11,9 @@ interface StoreProviderProps {
 
 const StoreContext = createContext<StoreContextType | null>(null);
 
+/**
+ * 设置明暗主题
+ */
 const setTheme = (theme: string) => {
   const html = document.getElementsByTagName("html");
   if (html.length) {
@@ -20,6 +23,9 @@ const setTheme = (theme: string) => {
   }
 };
 
+/**
+ * 状态修改函数
+ */
 const storeReducer = produce((draft: Config, action: StoreAction) => {
   switch (action.type) {
     case "SET_STATUS":
@@ -60,6 +66,9 @@ const storeReducer = produce((draft: Config, action: StoreAction) => {
   }
 });
 
+/**
+ * 用于监听组件配置的变化，monitorStorage中开启了缓存监听
+ */
 export const StoreProvider: React.FC<StoreProviderProps> = ({
   children,
   initialConfig = { ...createConfig() },
@@ -91,6 +100,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
           setInitialConfiguration(initialConfiguration);
           return Promise.resolve(true);
         };
+
         const initialConfiguration = await initializeFromStorage();
 
         if (initialConfiguration) {
@@ -130,6 +140,9 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({
   );
 };
 
+/**
+ * 提供使用这个context的钩子函数
+ */
 export const useStore = (): StoreContextType => {
   const context = useContext(StoreContext);
   if (!context) {
