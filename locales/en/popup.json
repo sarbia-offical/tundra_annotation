@@ -36,5 +36,6 @@
     "i18n_OpenAI_Translator": "OpenAI",
     "i18n_Selected_Message": "{{num}} elements have been selected",
     "i18n_Loading": "loading...",
-    "i18n_Submit_Message": "Saved successfully"
+    "i18n_Submit_Message": "Saved successfully",
+    "i18n_Empty_Message": "{{field}} cannot be empty"
 }

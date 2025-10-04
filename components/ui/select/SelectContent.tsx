@@ -131,7 +131,7 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
                   </CommandGroup>
                 ))
               ) : (
-                // 单航列表
+                // 单选列表
                 <CommandGroup>
                   {(filteredOptions as SelectOptionConfig[]).map((option) => {
                     return <SelectItem key={option.label} option={option} />;

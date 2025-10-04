@@ -9,12 +9,12 @@ export interface Config {
   status: string;
   theme: string;
   to: string;
-  fontDisplay: string;
-  underlineDisplay: string;
+  fontDisplay?: string;
+  underlineDisplay?: string[];
   systemRole: Mapping;
   userRole: Mapping;
   translationServices: string;
-  systemLanguage: string;
+  systemLanguage?: string;
 }
 
 // 工厂函数：生成默认配置
@@ -23,7 +23,7 @@ export const createConfig = (): Config => ({
   theme: defaultOptions.THEME,
   to: defaultOptions.TO,
   fontDisplay: defaultOptions.FONT_DISPLAY,
-  underlineDisplay: defaultOptions.UNDERLINE_DISPLAY,
+  underlineDisplay: [defaultOptions.UNDERLINE_DISPLAY],
   systemRole: contextFactory(defaultOptions.SYSTEM_ROLE),
   userRole: contextFactory(defaultOptions.USER_ROLE),
   translationServices: SERVICES.GOOGLE,

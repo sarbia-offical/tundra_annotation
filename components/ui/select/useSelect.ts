@@ -284,7 +284,11 @@ export const useSelect = (props: SelectProps) => {
 
   useEffect(() => {
     setSelectedValues(
-      defaultValue instanceof Array ? defaultValue : [defaultValue]
+      defaultValue instanceof Array
+        ? defaultValue
+        : !!defaultValue
+        ? [defaultValue]
+        : []
     );
   }, [defaultValue]);
   const contextValue: SelectContextValue = {

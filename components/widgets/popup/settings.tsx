@@ -12,6 +12,8 @@ import { Switch } from "@/components/ui/switch/index";
 import { Separator } from "@/components/ui/separator";
 import { RotateCcw, MousePointerClick } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
@@ -36,7 +38,7 @@ type FormValues = {
   status: string;
   theme: string;
   fontDisplay: string;
-  underlineDisplay: string;
+  underlineDisplay: string[];
   systemLanguage: string;
 };
 
@@ -60,9 +62,29 @@ const Settings = ({ className, children }: SettingsProps) => {
     [defaultConfiguration]
   );
 
-  const form = useForm<FormValues>({
-    defaultValues: defaultValues,
+  const FormSchema = z.object({
+    status: z
+      .string()
+      .min(1, t("i18n_Empty_Message", { field: t("i18n_Plugin_Status") })),
+    theme: z
+      .string()
+      .min(1, t("i18n_Empty_Message", { field: t("i18n_Theme") })),
+    fontDisplay: z
+      .string()
+      .min(1, t("i18n_Empty_Message", { field: t("i18n_Text_Style") })),
+    underlineDisplay: z
+      .array(z.string())
+      .min(1, t("i18n_Empty_Message", { field: t("i18n_Underline_Style") })),
+    systemLanguage: z
+      .string()
+      .min(1, t("i18n_Empty_Message", { field: t("i18n_System_Language") })),
   });
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    defaultValues: defaultValues,
+    resolver: zodResolver(FormSchema),
+  });
+
   const onSubmit = (data: FormValues) => {
     toast.success(t("i18n_Submit_Message"));
     updateStorage({
@@ -127,7 +149,7 @@ const Settings = ({ className, children }: SettingsProps) => {
                     selectType="single"
                     defaultValue={field.value}
                     onValueChange={(value: string[]) => {
-                      setTheme(value[0] as THEME);
+                      setTheme(value.length > 0 ? (value[0] as THEME) : null);
                       field.onChange(value);
                     }}
                     animationConfig={{
@@ -153,7 +175,9 @@ const Settings = ({ className, children }: SettingsProps) => {
                     selectType="single"
                     defaultValue={field.value}
                     onValueChange={(value: string[]) => {
-                      setSystemLanguage(value[0] as SYSTEM_LANGUAGE);
+                      setSystemLanguage(
+                        value.length > 0 ? (value[0] as SYSTEM_LANGUAGE) : null
+                      );
                       field.onChange(value);
                     }}
                     animationConfig={{
@@ -179,7 +203,9 @@ const Settings = ({ className, children }: SettingsProps) => {
                     selectType="single"
                     defaultValue={field.value}
                     onValueChange={(value: string[]) => {
-                      setFontDisplay(value[0] as FONT_DISPLAY);
+                      setFontDisplay(
+                        value.length > 0 ? (value[0] as FONT_DISPLAY) : null
+                      );
                       field.onChange(value);
                     }}
                     animationConfig={{
@@ -202,10 +228,10 @@ const Settings = ({ className, children }: SettingsProps) => {
                 <FormControl>
                   <Select
                     options={options.UNDERLINE_DISPLAY}
-                    selectType="single"
+                    selectType="multiple"
                     defaultValue={field.value}
                     onValueChange={(value: string[]) => {
-                      setUnderlineDisplay(value[0] as UNDERLINE_DISPLAY);
+                      setUnderlineDisplay(value as UNDERLINE_DISPLAY[]);
                       field.onChange(value);
                     }}
                     animationConfig={{

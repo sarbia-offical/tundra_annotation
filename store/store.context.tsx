@@ -11,6 +11,15 @@ interface StoreProviderProps {
 
 const StoreContext = createContext<StoreContextType | null>(null);
 
+const setTheme = (theme: string) => {
+  const html = document.getElementsByTagName("html");
+  if (html.length) {
+    html[0].classList.remove("light");
+    html[0].classList.remove("dark");
+    html[0].classList.add(theme === "dark" ? "dark" : "light");
+  }
+};
+
 const storeReducer = produce((draft: Config, action: StoreAction) => {
   switch (action.type) {
     case "SET_STATUS":
@@ -19,6 +28,7 @@ const storeReducer = produce((draft: Config, action: StoreAction) => {
     case "SET_THEME":
       const theme = action.payload;
       draft.theme = theme;
+      setTheme(theme);
       break;
     case "SET_SYSTEM_LANGUAGE":
       draft.systemLanguage = action.payload;
@@ -39,6 +49,8 @@ const storeReducer = produce((draft: Config, action: StoreAction) => {
       storage.setItem("local:Annotation_Config", action.payload);
       break;
     case "INIT_FROM_STORAGE":
+      const { theme: _theme } = action.payload;
+      setTheme(_theme || "light");
       return {
         ...draft,
         ...action.payload,

@@ -10,30 +10,6 @@ import {
 import { useStore } from "./store.context";
 import { Config } from "@/constant/model";
 
-export const useTheme = () => {
-  const { state, dispatch } = useStore();
-
-  const setTheme = useCallback(
-    (theme: THEME) => {
-      dispatch({ type: "SET_THEME", payload: theme });
-    },
-    [dispatch]
-  );
-
-  const toggleTheme = useCallback(() => {
-    const newTheme = state.theme === THEME.LIGHT ? THEME.DARK : THEME.LIGHT;
-    setTheme(newTheme);
-  }, [state.theme, setTheme]);
-
-  return {
-    theme: state.theme,
-    setTheme,
-    toggleTheme,
-    isLight: state.theme === THEME.LIGHT,
-    isDark: state.theme === THEME.DARK,
-  };
-};
-
 export const useDisplaySettings = () => {
   const { state, dispatch, isInitialized, initialConfiguration } = useStore();
 
@@ -45,15 +21,8 @@ export const useDisplaySettings = () => {
   );
 
   const setTheme = useCallback(
-    (status: THEME) => {
-      dispatch({ type: "SET_THEME", payload: status });
-    },
-    [dispatch]
-  );
-
-  const setSystemLanguage = useCallback(
-    (status: SYSTEM_LANGUAGE) => {
-      dispatch({ type: "SET_SYSTEM_LANGUAGE", payload: status });
+    (status?: THEME | null) => {
+      dispatch({ type: "SET_THEME", payload: status || "" });
     },
     [dispatch]
   );
@@ -72,15 +41,23 @@ export const useDisplaySettings = () => {
     [dispatch]
   );
 
+  const setSystemLanguage = useCallback(
+    (status?: SYSTEM_LANGUAGE | null) => {
+      dispatch({ type: "SET_SYSTEM_LANGUAGE", payload: status || "" });
+    },
+    [dispatch]
+  );
+
   const setFontDisplay = useCallback(
-    (fontDisplay: FONT_DISPLAY) => {
-      dispatch({ type: "SET_FONT_DISPLAY", payload: fontDisplay });
+    (fontDisplay?: FONT_DISPLAY | null) => {
+      console.log("status", fontDisplay);
+      dispatch({ type: "SET_FONT_DISPLAY", payload: fontDisplay || "" });
     },
     [dispatch]
   );
 
   const setUnderlineDisplay = useCallback(
-    (underlineDisplay: UNDERLINE_DISPLAY) => {
+    (underlineDisplay: UNDERLINE_DISPLAY[]) => {
       dispatch({ type: "SET_UNDERLINE_DISPLAY", payload: underlineDisplay });
     },
     [dispatch]

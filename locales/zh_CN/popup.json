@@ -36,5 +36,6 @@
     "i18n_OpenAI_Translator": "OpenAI",
     "i18n_Selected_Message": "{{num}}个选项被选中",
     "i18n_Loading": "加载中...",
-    "i18n_Submit_Message": "保存成功"
+    "i18n_Submit_Message": "保存成功",
+    "i18n_Empty_Message": "{{field}}不能为空"
 }
