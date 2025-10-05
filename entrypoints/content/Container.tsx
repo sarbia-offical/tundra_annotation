@@ -3,7 +3,6 @@ import "@/assets/tailwind.css";
 import { Button } from "@/components/ui/button";
 import { useDisplaySettings } from "@/store/store.hooks";
 import { useTranslation } from "react-i18next";
-import { MarkStoreProvider } from "./store/store.context";
 import { useSelection } from "./hooks/useSelection";
 import { ColorSelectionBox } from "./components/ColorSelectionBox";
 
@@ -27,9 +26,7 @@ const Container: React.FC = () => {
       <Button className="flex-1" type="submit">
         {t("i18n_Submit")}
       </Button>
-      <MarkStoreProvider>
-        <ColorSelectionBox />
-      </MarkStoreProvider>
+      <ColorSelectionBox />
     </div>
   );
 };

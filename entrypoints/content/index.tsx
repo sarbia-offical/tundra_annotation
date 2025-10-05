@@ -4,6 +4,7 @@ import initTranslations from "@/lib/i18n.ts";
 import { i18nConfig } from "@/lib/i18nType.ts";
 import ReactDOM from "react-dom/client";
 import "./style.css";
+import { MarkStoreProvider } from "./store/store.context";
 
 export default defineContentScript({
   matches: ["*://*/*"],
@@ -18,7 +19,9 @@ export default defineContentScript({
         const root = ReactDOM.createRoot(container);
         root.render(
           <StoreProvider>
-            <Container />
+            <MarkStoreProvider>
+              <Container />
+            </MarkStoreProvider>
           </StoreProvider>
         );
         return root;

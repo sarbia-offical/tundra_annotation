@@ -34,6 +34,9 @@ const MarkStoreReducer = produce(
   }
 );
 
+/**
+ * 用于存储颜色选择框的位置，和是否显示隐藏
+ */
 export const MarkStoreProvider: React.FC<MarkStoreProviderProps> = ({
   children,
   initialConfig = {},

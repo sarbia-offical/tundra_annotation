@@ -1,3 +1,10 @@
+import { isMobileOrTablet } from "@/lib/utils";
+
+export interface Position {
+  x: number;
+  y: number;
+}
+
 export class SelectionObserver {
   private _callback: (range: Range | null) => void;
   private _document: Document;
@@ -55,4 +62,141 @@ export class SelectionObserver {
       this._document.addEventListener(event, this._eventHandler);
     }
   }
+}
+
+/**
+ * 判断选取内容是从左到右还是从右到左
+ * @param selection - 选区对象
+ * @returns 如果是反向选择则返回 true
+ */
+export function isSelectionBackwards(selection: Selection): boolean {
+  if (selection.focusNode === selection.anchorNode) {
+    return selection.focusOffset < selection.anchorOffset;
+  }
+
+  const range = selection.getRangeAt(0);
+  return range.startContainer === selection.focusNode;
+}
+
+/**
+ * 获取range对象里的所有元素，并且筛选出所有的text节点
+ * @param range
+ * @returns
+ */
+export function forEachNodeInRange(range: Range): Text[] {
+  const root = range.commonAncestorContainer;
+  const document = root.ownerDocument;
+  if (!document) return [];
+  const textNodes: Text[] = [];
+  const nodeIter = document.createNodeIterator(root, NodeFilter.SHOW_ALL);
+  const whitespaceOnly = /^\s*$/;
+  let currentNode: Node | null;
+  while ((currentNode = nodeIter.nextNode())) {
+    const length =
+      currentNode.nodeType === Node.TEXT_NODE
+        ? (currentNode as Text).length
+        : currentNode.childNodes.length;
+    if (
+      range.comparePoint(currentNode, 0) <= 0 &&
+      range.comparePoint(currentNode, length) >= 0
+    ) {
+      if (currentNode.nodeType === Node.TEXT_NODE) {
+        const textNode = currentNode as Text;
+        if (!whitespaceOnly.test(textNode.textContent || "")) {
+          textNodes.push(textNode);
+        }
+      }
+    }
+  }
+  return textNodes;
+}
+
+export function getTextBoundingBoxes(range: Range): DOMRect[] {
+  const rects: DOMRect[] = [];
+  const textNodes = forEachNodeInRange(range);
+  textNodes.forEach((node) => {
+    const ownerDocument = node.ownerDocument;
+    if (!ownerDocument) return;
+    const nodeRange = ownerDocument.createRange();
+    nodeRange.selectNodeContents(node);
+    if (node === range.startContainer) {
+      nodeRange.setStart(node, range.startOffset);
+    }
+    if (node === range.endContainer) {
+      nodeRange.setEnd(node, range.endOffset);
+    }
+
+    if (nodeRange.collapsed) {
+      nodeRange.detach();
+      return;
+    }
+    const viewportRects = nodeRange.getClientRects();
+    nodeRange.detach();
+    rects.push(...viewportRects);
+  });
+  return rects;
+}
+
+/**
+ * 获取选区焦点的边界矩形
+ * @param selection - 选区对象
+ * @returns 焦点位置的边界矩形，若无有效选区则返回 null
+ */
+export function selectionFocusRect(
+  selection: Selection,
+  textBoxes: DOMRect[]
+): DOMRect | null {
+  if (selection.isCollapsed || selection.rangeCount === 0) {
+    return null;
+  }
+  return isSelectionBackwards(selection)
+    ? textBoxes[0]
+    : textBoxes[textBoxes.length - 1];
+}
+
+/**
+ * 根据选取划线方向设置定位
+ * @param rect
+ * @param selectionIsBackwards
+ * @returns
+ */
+export function updatePopoverPosOnSelectionChange(
+  rect: DOMRect,
+  selectionIsBackwards: boolean
+): Position {
+  const position: Position = {
+    x: 0,
+    y: 0,
+  };
+  if (selectionIsBackwards) {
+    if (isMobileOrTablet) {
+      position.y = rect.top + window.scrollY + 80;
+    } else {
+      position.y = rect.top + window.scrollY - 20;
+    }
+  } else {
+    if (isMobileOrTablet) {
+      position.y = rect.top + rect.height + window.scrollY + 50;
+    } else {
+      position.y = rect.top + rect.height + window.scrollY + 30;
+    }
+  }
+  if (selectionIsBackwards) {
+    position.x = rect.left + window.scrollX + 70;
+  } else {
+    position.x = rect.right + window.scrollX - 70;
+  }
+
+  if (isMobileOrTablet) {
+    position.x = document.documentElement.clientWidth / 2;
+  }
+
+  if (position.x < 76) {
+    position.x = 76;
+  }
+
+  if (position.x > document.documentElement.clientWidth - 76) {
+    position.x = document.documentElement.clientWidth - 76;
+  }
+  return position;
 }

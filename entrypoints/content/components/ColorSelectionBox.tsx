@@ -8,16 +8,18 @@ const ColorSelectionBox: React.FC = () => {
   usePopoverPosition();
   usePopoverVisibility();
   const { defaultConfiguration } = useDisplaySettings();
+  const { popoverPosition } = usePopoverPosition();
+  const { isVisible } = usePopoverVisibility();
   const { theme } = defaultConfiguration;
-  return (
+  return isVisible ? (
     <div className={theme === "dark" ? "dark" : "light"}>
       <div
-        className={`fixed flex items-center flex-col top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-5
+        className={`absolute flex items-center flex-col top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-5
         z-[9999] shadow-2xl
         rounded-lg annotate_bg`}
         style={{
-          left: "50%",
-          top: "50%",
+          left: popoverPosition.x || "50%",
+          top: popoverPosition.y || "50%",
         }}
       >
         <div className="px-1.5 py-1.5">
@@ -25,6 +27,8 @@ const ColorSelectionBox: React.FC = () => {
         </div>
       </div>
     </div>
+  ) : (
+    <></>
   );
 };
 ColorSelectionBox.displayName = "ColorSelectionBox";
