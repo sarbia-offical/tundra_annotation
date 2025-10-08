@@ -11,7 +11,7 @@ export function useSelection(): [() => void] {
   const { setPosition } = usePopoverPosition();
   const { showPopover, hidePopover } = usePopoverVisibility();
   const startObserver = () => {
-    new SelectionObserver((range: Range | null) => {
+    new SelectionObserver((range: Range | null, event: Event) => {
       const selection = document.getSelection();
       if (
         !selection?.toString() ||

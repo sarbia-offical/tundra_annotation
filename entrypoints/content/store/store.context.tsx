@@ -30,6 +30,9 @@ const MarkStoreReducer = produce(
       case "HIDE_POPOVER":
         draft.popoverVisible = false;
         break;
+      case "CHANGE_COLOR":
+        draft.color = action.payload;
+        break;
     }
   }
 );

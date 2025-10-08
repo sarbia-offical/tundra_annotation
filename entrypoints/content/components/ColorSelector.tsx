@@ -2,11 +2,11 @@ import React, { useState, useCallback } from "react";
 import { Check } from "lucide-react";
 
 interface ColorSelectorProps extends React.ComponentProps<"input"> {
-  onClear?: () => void;
+  setColor: (color: string) => void;
 }
 
 const ColorSelector = React.forwardRef<HTMLDivElement, ColorSelectorProps>(
-  ({ className, onClear, ...props }, ref) => {
+  ({ className, setColor }, ref) => {
     const colorList = [
       "#ed4845",
       "#4b2e2b",
@@ -20,6 +20,7 @@ const ColorSelector = React.forwardRef<HTMLDivElement, ColorSelectorProps>(
 
     const handleSelect = (color: string) => {
       setSelected(color);
+      setColor(color);
     };
 
     const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {

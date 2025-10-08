@@ -1,0 +1,31 @@
+.annotate-highlighted-text {
+  position: relative;
+  cursor: pointer;
+  border-bottom: 2px;
+  background-image: var(--underline-bg); /* 设置波浪线背景 */
+  background-repeat: repeat-x;
+  background-size: auto 4px;
+  border-radius: 3px;
+  padding-bottom: 4px;
+  animation: shift 1.4s linear infinite;
+  animation-play-state: paused;
+  transition: color 0.2s linear;
+}
+
+.annotate-highlighted-text-hover {
+  color: var(--bg, #ffff0055); /* 默认背景色 */
+  animation-play-state: running;
+}
+
+@keyframes shift {
+  0% {
+    background-position: -20px 100%;
+  }
+  100% {
+    background-position: 0px 100%;
+  }
+}
+
+.cancel-truncation {
+  overflow-y: unset !important;
+}

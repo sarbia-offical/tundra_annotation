@@ -50,7 +50,6 @@ export const useDisplaySettings = () => {
 
   const setFontDisplay = useCallback(
     (fontDisplay?: FONT_DISPLAY | null) => {
-      console.log("status", fontDisplay);
       dispatch({ type: "SET_FONT_DISPLAY", payload: fontDisplay || "" });
     },
     [dispatch]

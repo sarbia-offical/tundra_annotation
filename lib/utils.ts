@@ -1,5 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { v4 as uuidv4 } from "uuid";
+import { cancelTruncation, HighlightClassName } from "./Marks/Mark.type";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -22,6 +24,54 @@ export function safeJsonStringify(value: any): string {
     : JSON.stringify(value, (key: string, value: any) =>
         typeof value === "undefined" ? null : value
       );
+}
+
+export function makeid(length = 64): string {
+  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const charactersLength = characters.length;
+  let result = [];
+  for (let i = 0; i < length; i++) {
+    result.push(
+      characters.charAt(Math.floor(Math.random() * charactersLength))
+    );
+  }
+  return result.join("");
+}
+
+export function generateUUID() {
+  return uuidv4();
+}
+
+/**
+ * 高亮样式，波浪线加背景色
+ * @param element
+ * @param bgc
+ */
+export function applyHighlightStyle(
+  element: HTMLElement,
+  bgc: string,
+  bgImage: `url("${string}")`
+) {
+  element.parentElement?.classList.add(`${cancelTruncation}`);
+  element.classList.add(`${HighlightClassName}`);
+  element.style.setProperty("--underline-bg", bgImage);
+  element.style.setProperty("--bg", bgc);
+  Object.assign(element.style, {
+    backgroundColor: `${bgc}55`,
+  });
+}
+
+export function createWavyLines(color: string): `url("${string}")` {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 4'>
+    <path fill='none' stroke='${color}' stroke-width='1.5'
+      d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3' />
+  </svg>`;
+
+  const encoded = encodeURIComponent(svg)
+    .replace(/'/g, "%27")
+    .replace(/"/g, "%22");
+
+  return `url("data:image/svg+xml,${encoded}")`;
 }
 
 export const isMobileOrTablet = (function () {

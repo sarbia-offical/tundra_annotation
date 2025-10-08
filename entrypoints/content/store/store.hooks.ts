@@ -72,3 +72,26 @@ export const usePopoverVisibility = () => {
     togglePopover,
   };
 };
+
+/**
+ * 控制弹窗显隐的hooks
+ * @returns
+ */
+export const useColor = () => {
+  const { color, dispatch } = useStore();
+
+  const setColor = useCallback(
+    (color: string) => {
+      dispatch({
+        type: "CHANGE_COLOR",
+        payload: color,
+      });
+    },
+    [dispatch]
+  );
+
+  return {
+    color,
+    setColor,
+  };
+};

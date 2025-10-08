@@ -1,4 +1,5 @@
 import { Dispatch } from "react";
+import { string } from "zod";
 
 export interface PopoverPositionType {
   x: number;
@@ -20,11 +21,16 @@ export type MarkStoreAction =
     }
   | {
       type: "HIDE_POPOVER";
+    }
+  | {
+      type: "CHANGE_COLOR";
+      payload: string;
     };
 
 export interface MarkStoreType {
   popoverPosition: PopoverPositionType;
   popoverVisible: boolean;
+  color?: string;
 }
 
 export type MarkStoreContextType = MarkStoreType & {
@@ -35,4 +41,5 @@ export type MarkStoreContextType = MarkStoreType & {
 export const initialMarkStoreState: MarkStoreType = {
   popoverPosition: { x: 0, y: 0 },
   popoverVisible: false,
+  color: "",
 };

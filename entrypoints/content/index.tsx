@@ -3,8 +3,17 @@ import { StoreProvider } from "@/store/store.context";
 import initTranslations from "@/lib/i18n.ts";
 import { i18nConfig } from "@/lib/i18nType.ts";
 import ReactDOM from "react-dom/client";
-import "./style.css";
 import { MarkStoreProvider } from "./store/store.context";
+import globalStyle from "./globalStyle.css?raw";
+import "./style.css";
+
+const injectGlobalStyles = () => {
+  if (document.getElementById("global-annotate-styles")) return;
+  const style = document.createElement("style");
+  style.id = "global-annotate-styles";
+  style.textContent = globalStyle;
+  document.head.appendChild(style);
+};
 
 export default defineContentScript({
   matches: ["*://*/*"],
@@ -16,6 +25,7 @@ export default defineContentScript({
       position: "inline",
       inheritStyles: true,
       onMount: (container) => {
+        injectGlobalStyles();
         const root = ReactDOM.createRoot(container);
         root.render(
           <StoreProvider>

@@ -6,7 +6,7 @@ export interface Position {
 }
 
 export class SelectionObserver {
-  private _callback: (range: Range | null) => void;
+  private _callback: (range: Range | null, event: Event) => void;
   private _document: Document;
   private _pendingCallback: number | null = null;
   private _eventHandler: (event: Event) => void;
@@ -33,19 +33,21 @@ export class SelectionObserver {
     return range;
   }
   constructor(
-    callback: (range: Range | null) => void,
+    callback: (range: Range | null, event: Event) => void,
     observedNode?: Document
   ) {
     this._callback = callback;
     this._document = observedNode || document;
     let isMouseDown = false;
     let events = ["mousedown", "mouseup", "selectionchange"];
-    const scheduleCallback = (delay = 10) => {
+
+    const scheduleCallback = (delay = 10, event: Event) => {
       this._cancelPendingCallback();
       this._pendingCallback = window.setTimeout(() => {
-        this._callback(this._selectedRangeCallback(this._document));
+        this._callback(this._selectedRangeCallback(this._document), event);
       }, delay);
     };
+
     this._eventHandler = (event: Event) => {
       if (event.type === "mousedown") {
         isMouseDown = true;
@@ -56,7 +58,7 @@ export class SelectionObserver {
       if (isMouseDown) return;
       this._cancelPendingCallback();
       const delay = event.type === "mouseup" ? 10 : 100;
-      scheduleCallback(delay);
+      scheduleCallback(delay, event);
     };
     for (const event of events) {
       this._document.addEventListener(event, this._eventHandler);
@@ -111,6 +113,11 @@ export function forEachNodeInRange(range: Range): Text[] {
   return textNodes;
 }
 
+/**
+ * 获取range对象内部文本节点的几何坐标
+ * @param range
+ * @returns
+ */
 export function getTextBoundingBoxes(range: Range): DOMRect[] {
   const rects: DOMRect[] = [];
   const textNodes = forEachNodeInRange(range);
@@ -138,9 +145,9 @@ export function getTextBoundingBoxes(range: Range): DOMRect[] {
 }
 
 /**
- * 获取选区焦点的边界矩形
- * @param selection - 选区对象
- * @returns 焦点位置的边界矩形，若无有效选区则返回 null
+ * 根据鼠标滑动的方向，选择最边缘的元素几何坐标，用于弹出框的位置选取
+ * @param selection
+ * @returns
  */
 export function selectionFocusRect(
   selection: Selection,
