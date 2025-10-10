@@ -8,16 +8,14 @@ import { useColor, usePopoverVisibility } from "./store/store.hooks";
 import { useSelection } from "./hooks/useSelection";
 import { useMarker } from "./hooks/useMarker";
 import { useTextHighlighter } from "./hooks/usePaint";
-import { AttributeNameHighlightColor, Context } from "@/lib/Marks/Mark.type";
+import { HightlightHover, Context } from "@/lib/Marks/Mark.type";
 import moment from "moment";
 import { applyHighlightStyle, createWavyLines } from "@/lib/utils";
 
 const Container: React.FC = () => {
-  const { t } = useTranslation();
   const { defaultConfiguration } = useDisplaySettings();
   const { i18n } = useTranslation();
-  const { color } = useColor();
-  const { isVisible } = usePopoverVisibility();
+  const { color, setColor } = useColor();
   const [startObserver] = useSelection();
   const [markerInstance, buildMarker] = useMarker();
   const { highlight } = useTextHighlighter();
@@ -54,7 +52,7 @@ const Container: React.FC = () => {
           e: Event
         ) {
           allElements.forEach((ele: HTMLElement) => {
-            ele.classList.add("annotate-highlighted-text-hover");
+            ele.classList.add(HightlightHover);
           });
         },
         onHighlightLeave(
@@ -63,7 +61,7 @@ const Container: React.FC = () => {
           e: Event
         ) {
           allElements.forEach((ele: HTMLElement) => {
-            ele.classList.remove("annotate-highlighted-text-hover");
+            ele.classList.remove(HightlightHover);
           });
         },
       }
@@ -83,13 +81,12 @@ const Container: React.FC = () => {
     } else if (color) {
       console.log("color", color);
     }
+    setColor("");
   }, [color, markerInstance]);
 
   return (
     <div className={theme === "dark" ? "dark" : ""}>
-      <Button className="flex-1" type="submit">
-        {t("i18n_Submit")}
-      </Button>
+      {/* 高亮颜色选择器 */}
       <ColorSelectionBox />
     </div>
   );

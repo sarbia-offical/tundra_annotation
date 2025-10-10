@@ -6,11 +6,12 @@ import {
   updatePopoverPosOnSelectionChange,
 } from "@/lib/SelectionObserver";
 import { usePopoverPosition, usePopoverVisibility } from "../store/store.hooks";
+import React from "react";
 
 export function useSelection(): [() => void] {
   const { setPosition } = usePopoverPosition();
   const { showPopover, hidePopover } = usePopoverVisibility();
-  const startObserver = () => {
+  const startObserver = React.useCallback(() => {
     new SelectionObserver((range: Range | null, event: Event) => {
       const selection = document.getSelection();
       if (
@@ -35,6 +36,6 @@ export function useSelection(): [() => void] {
         }
       }
     });
-  };
+  }, []);
   return [startObserver];
 }

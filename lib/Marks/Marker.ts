@@ -11,6 +11,13 @@ import {
   EventHandlerContext,
 } from "./Mark.type";
 import { generateUUID } from "@/lib/utils";
+import {
+  isBlackListedElementNode,
+  findPreviousTextNodeInDomTree,
+  findNextTextNodeInDomTree,
+  getInnerText,
+  resolveHighlightElements,
+} from "./Mark.util";
 
 interface MarkerConstructorArgs {
   rootElement?: HTMLElement;
@@ -102,41 +109,53 @@ export class Marker {
         defaultCharsToKeepForTextBeforeAndTextAfter,
     }
   ): SerializedRange | null {
-    this._document.head.appendChild(blackListedElementStyle);
-    this.adjustRangeAroundBlackListedElement(range);
+    try {
+      if (range.collapsed) {
+        console.warn("Cannot serialize collapsed range");
+        return null;
+      }
+      this._document.head.appendChild(blackListedElementStyle);
+      this.adjustRangeAroundBlackListedElement(range);
 
-    const uid = options?.uid || generateUUID();
+      const uid = options?.uid || generateUUID();
 
-    const color = options?.color;
+      const color = options?.color;
 
-    const createDate = options.createDate;
+      const createDate = options.createDate;
 
-    const selection = this.convertRangeToSelection(range);
+      const selection = this.convertRangeToSelection(range);
 
-    let text = selection.toString();
-    let textNormalized = this.normalizeText(text);
-    if (!textNormalized) {
-      console.warn("No valid text content in selected range");
+      let text = selection.toString();
+      let textNormalized = this.normalizeText(text);
+      if (!textNormalized) {
+        console.warn("No valid text content in selected range");
+        return null;
+      }
+
+      const charsToKeep =
+        options?.charsToKeepForTextBeforeAndTextAfter ||
+        defaultCharsToKeepForTextBeforeAndTextAfter;
+
+      const [textBefore, textAfter] = this.extractContextText(
+        range,
+        charsToKeep
+      );
+      this.state.uidToSerializedRange[uid] = {
+        uid,
+        textBefore,
+        text,
+        textAfter,
+        pageData: {},
+        startOffset: range.startOffset,
+        endOffset: range.endOffset,
+        color,
+        createDate,
+      };
+      return this.state.uidToSerializedRange[uid];
+    } catch (error) {
+      this._document.head.removeChild(blackListedElementStyle);
       return null;
     }
-
-    const charsToKeep =
-      options?.charsToKeepForTextBeforeAndTextAfter ||
-      defaultCharsToKeepForTextBeforeAndTextAfter;
-
-    const [textBefore, textAfter] = this.extractContextText(range, charsToKeep);
-    this.state.uidToSerializedRange[uid] = {
-      uid,
-      textBefore,
-      text,
-      textAfter,
-      pageData: {},
-      startOffset: range.startOffset,
-      endOffset: range.endOffset,
-      color,
-      createDate,
-    };
-    return this.state.uidToSerializedRange[uid];
   }
 
   /**
@@ -147,7 +166,7 @@ export class Marker {
     let startContainer = range.startContainer;
     let blacklistedParentOfStartContainer = null;
     while (startContainer) {
-      if (this.isBlackListedElementNode(startContainer)) {
+      if (isBlackListedElementNode(startContainer)) {
         blacklistedParentOfStartContainer = startContainer;
       }
       startContainer = startContainer.parentElement as any;
@@ -156,7 +175,7 @@ export class Marker {
     let endContainer = range.endContainer;
     let blacklistedParentOfEndContainer = null;
     while (endContainer) {
-      if (this.isBlackListedElementNode(endContainer)) {
+      if (isBlackListedElementNode(endContainer)) {
         blacklistedParentOfEndContainer = endContainer;
       }
       endContainer = endContainer.parentElement as any;
@@ -172,183 +191,16 @@ export class Marker {
 
     if (blacklistedParentOfStartContainer) {
       range.setStart(
-        this.findNextTextNodeInDomTree(
-          blacklistedParentOfStartContainer
-        ) as any,
+        findNextTextNodeInDomTree(blacklistedParentOfStartContainer) as any,
         0
       );
     }
 
     if (blacklistedParentOfEndContainer) {
-      let prevNode = this.findPreviousTextNodeInDomTree(
+      let prevNode = findPreviousTextNodeInDomTree(
         blacklistedParentOfEndContainer
       ) as any;
-      range.setEnd(prevNode, this.getInnerText(prevNode).length);
-    }
-  }
-
-  /**
-   * 在兄弟节点中，找到下一个包含文本的节点
-   * @param node
-   * @returns
-   */
-  private findNextTextNodeInDomTree(node: Node | null) {
-    while (node) {
-      /**
-       * 跳过黑名单中的的兄弟节点
-       */
-      while (this.isBlackListedElementNode(node?.nextSibling || null)) {
-        node = node?.nextSibling || null;
-      }
-      /**
-       * 遍历兄弟几点，过滤黑名单兄弟节点，找到兄弟节点下的第一个文本节点
-       */
-      while (node?.nextSibling) {
-        if (this.isBlackListedElementNode(node?.nextSibling)) {
-          node = node.nextSibling;
-          continue;
-        }
-        const candidate = this.findFirstChildTextNode(node.nextSibling);
-        if (candidate) {
-          return candidate;
-        }
-        node = node.nextSibling;
-      }
-      /**
-       * 如果当前层的兄弟节点都没找到文本节点，则继续查找父级元素
-       */
-      node = node?.parentElement || null;
-    }
-    return null;
-  }
-
-  /**
-   * 在指定节点下，递归地寻找第一个文本节点。
-   * @param node
-   * @returns
-   */
-  private findFirstChildTextNode(node: Node): Node | null {
-    if (node.nodeType === Node.TEXT_NODE) {
-      return node;
-    }
-    if (node.childNodes) {
-      for (let i = 0; i < node.childNodes.length; i++) {
-        if (this.isBlackListedElementNode(node.childNodes[i])) {
-          continue;
-        }
-        const candidate = this.findFirstChildTextNode(node.childNodes[i]);
-        if (candidate !== null) {
-          return candidate;
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   * 在兄弟节点中，找到上一个包含文本的节点
-   * @param node
-   * @returns
-   */
-  private findPreviousTextNodeInDomTree(node: Node | null) {
-    while (node) {
-      while (this.isBlackListedElementNode(node?.previousSibling || null)) {
-        node = node?.previousSibling || null;
-      }
-      while (node?.previousSibling) {
-        const candidate = this.findLastChildTextNode(
-          node?.previousSibling || null
-        );
-        if (candidate) {
-          return candidate;
-        }
-        node = node.previousSibling;
-      }
-
-      node = node?.parentElement || null;
-    }
-    return null;
-  }
-
-  /**
-   * 在前一个兄弟节点内部查找最后一个文本节点；
-   * @param node
-   * @returns
-   */
-  private findLastChildTextNode(node: Node | null): Node | null {
-    if (!node) {
-      return null;
-    }
-    if (node.nodeType === Node.TEXT_NODE) {
-      return node;
-    }
-    if (node.childNodes) {
-      for (let i = node.childNodes.length - 1; i >= 0; i--) {
-        if (this.isBlackListedElementNode(node.childNodes[i])) {
-          continue;
-        }
-        const candidate = this.findLastChildTextNode(node.childNodes[i]);
-        if (candidate !== null) {
-          return candidate;
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   * 判断这个节点是否为黑名单
-   * @param element
-   * @returns
-   */
-  private isBlackListedElementNode(element: Node | null) {
-    if (!element) {
-      return false;
-    }
-    if (element.nodeType !== Node.ELEMENT_NODE) {
-      return false;
-    }
-    const style = getComputedStyle(element as any);
-    if (style.display === "none") {
-      return true;
-    }
-    if (style.visibility === "hidden") {
-      return true;
-    }
-    const className = (element as any).className;
-    if (
-      className &&
-      className.indexOf &&
-      className.indexOf(HighlightBlacklistedElementClassName) >= 0
-    ) {
-      return true;
-    }
-    const tagName = (element as any).tagName;
-    const blacklistedTags = ["STYLE", "SCRIPT", "TITLE", "NOSCRIPT", "SVG"];
-    return blacklistedTags.includes(tagName?.toUpperCase());
-  }
-
-  /**
-   * 递归获取节点内的所有文本
-   * @param element
-   * @returns
-   */
-  private getInnerText(element: Node) {
-    if (this.isBlackListedElementNode(element)) {
-      return "";
-    }
-    if (element.nodeType === Node.TEXT_NODE) {
-      return element.textContent;
-    } else {
-      if (typeof (element as any).innerText === "undefined") {
-        let result = "";
-        for (let i = 0; i < element.childNodes.length; i++) {
-          result += this.getInnerText(element.childNodes[i]);
-        }
-        return result;
-      } else {
-        return (element as any).innerText;
-      }
+      range.setEnd(prevNode, getInnerText(prevNode).length);
     }
   }
 
@@ -405,11 +257,11 @@ export class Marker {
     let totalNumberOfBeforeCharsNumber = charsToKeep - textBefore.length;
     let beforeElement: Node | null = startContainer;
     while (totalNumberOfBeforeCharsNumber > 0) {
-      beforeElement = this.findPreviousTextNodeInDomTree(beforeElement);
+      beforeElement = findPreviousTextNodeInDomTree(beforeElement);
       if (!beforeElement) {
         break;
       }
-      const nodeText = this.getInnerText(beforeElement);
+      const nodeText = getInnerText(beforeElement);
       if (nodeText.length > totalNumberOfBeforeCharsNumber) {
         textBefore =
           nodeText.substring(nodeText.length - totalNumberOfBeforeCharsNumber) +
@@ -430,10 +282,10 @@ export class Marker {
     let afterElement: Node | null = endContainer;
     let totalNumberOfAfterCharsNumber = charsToKeep - textAfter.length;
     while (totalNumberOfAfterCharsNumber > 0) {
-      afterElement = this.findNextTextNodeInDomTree(afterElement);
+      afterElement = findNextTextNodeInDomTree(afterElement);
       if (!afterElement) break;
 
-      const nodeText = this.getInnerText(afterElement);
+      const nodeText = getInnerText(afterElement);
       if (nodeText.length > totalNumberOfAfterCharsNumber) {
         textAfter += nodeText.substring(0, totalNumberOfAfterCharsNumber);
         break;
@@ -452,15 +304,14 @@ export class Marker {
    * @param errorCallback
    * @returns
    */
-  public paint(
-    serializedRange: SerializedRange,
-    errorCallback?: (errorLog: any) => void
-  ): any {
+  public paint(serializedRange: SerializedRange): any {
     if (!serializedRange) {
       return;
     }
-    this.batchPaint([serializedRange]);
-    return {};
+    const { errors } = this.batchPaint([serializedRange]);
+    if (errors[0]) {
+      throw errors[0];
+    }
   }
 
   /**
@@ -512,7 +363,7 @@ export class Marker {
 
             // 收集中间所有文本节点
             while (true) {
-              ptr = this.findNextTextNodeInDomTree(ptr);
+              ptr = findNextTextNodeInDomTree(ptr);
               if (ptr === range.endContainer) {
                 break;
               }
@@ -539,9 +390,12 @@ export class Marker {
             });
           })();
           this.paintHighlights(uid);
-        } catch (error) {}
+        } catch (error) {
+          errors[i] = error;
+        }
       }
     }
+    return { errors };
   }
 
   /**
@@ -553,7 +407,7 @@ export class Marker {
       serializedRange: this.state.uidToSerializedRange[highlightId],
       marker: this,
     };
-    for (let element of this.resolveHighlightElements(highlightId)) {
+    for (let element of resolveHighlightElements(highlightId, this._document)) {
       this._highlightPainter.paintHighlight(context, element);
     }
   }
@@ -563,7 +417,7 @@ export class Marker {
    * @param id
    */
   public unPaint(id: string) {
-    for (const element of this.resolveHighlightElements(id)) {
+    for (const element of resolveHighlightElements(id, this._document)) {
       let childNodes = Array.from(element.childNodes);
       for (let i = 0; i < childNodes.length; i++) {
         const childNode = childNodes[i];
@@ -571,23 +425,6 @@ export class Marker {
       }
       element.parentNode?.removeChild(element);
     }
-  }
-
-  /**
-   * 获取到同一高亮ID的所有标签
-   * @param highlightId
-   * @returns
-   */
-  private resolveHighlightElements(highlightId: string): HTMLElement[] {
-    let elements: HTMLElement[] = [];
-    for (let item of Array.from(
-      this._document.getElementsByTagName(HighlightTagName)
-    )) {
-      if (item.getAttribute(AttributeNameHighlightId) === highlightId) {
-        elements.push(item as HTMLElement);
-      }
-    }
-    return elements;
   }
 
   /**
@@ -609,7 +446,7 @@ export class Marker {
   private batchDeserializeRange(serializedRanges: SerializedRange[]) {
     this._document.head.appendChild(blackListedElementStyle);
     // 获取根元素的文本内容
-    const rootText = this.normalizeText(this.getInnerText(this._rootElement));
+    const rootText = this.normalizeText(getInnerText(this._rootElement));
     const results = {} as any;
     const errors = {} as any;
     for (let i = 0; i < serializedRanges.length; i++) {
@@ -648,16 +485,14 @@ export class Marker {
    * @param range
    */
   private trimRangeSpaces(range: Range) {
-    let start = this.getInnerText(range.startContainer).substr(
-      range.startOffset
-    );
+    let start = getInnerText(range.startContainer).substr(range.startOffset);
     let startTrimmed = start.trimStart();
     range.setStart(
       range.startContainer,
       range.startOffset + (start.length - startTrimmed.length)
     );
 
-    let end = this.getInnerText(range.endContainer).substr(0, range.endOffset);
+    let end = getInnerText(range.endContainer).substr(0, range.endOffset);
     let endTrimmed = end.trimEnd();
     range.setEnd(
       range.endContainer,
@@ -666,7 +501,7 @@ export class Marker {
   }
 
   /**
-   * 递归查找目标元素和便宜值
+   * 递归查找目标元素和偏移值
    * @param root
    * @param offset
    * @returns
@@ -682,13 +517,13 @@ export class Marker {
       };
     }
     const childNodes = Array.from(root.childNodes).filter((node) => {
-      return !this.isBlackListedElementNode(node);
+      return !isBlackListedElementNode(node);
     });
 
     let cumulativeOffset = 0;
     for (let i = 0; i < childNodes.length; i++) {
       const child = childNodes[i];
-      const childText = this.normalizeText(this.getInnerText(child));
+      const childText = this.normalizeText(getInnerText(child));
       const childLength = childText.length;
       const childStartOffset = cumulativeOffset;
       const childEndOffset = cumulativeOffset + childLength;
@@ -701,7 +536,7 @@ export class Marker {
     }
     if (childNodes.length > 0) {
       const lastChild = childNodes[childNodes.length - 1];
-      const lastText = this.normalizeText(this.getInnerText(lastChild));
+      const lastText = this.normalizeText(getInnerText(lastChild));
       return {
         element: lastChild,
         offset: lastText.length,
@@ -789,7 +624,7 @@ export class Marker {
       }
       const allElements: HTMLElement[] = this.normalizeElements(
         id,
-        this.resolveHighlightElements(id)
+        resolveHighlightElements(id, this._document)
       );
       if (allElements.length === 0) return;
       if (event.type === "click") {

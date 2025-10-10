@@ -30,7 +30,7 @@ export type MarkStoreAction =
 export interface MarkStoreType {
   popoverPosition: PopoverPositionType;
   popoverVisible: boolean;
-  color?: string;
+  color: string;
 }
 
 export type MarkStoreContextType = MarkStoreType & {

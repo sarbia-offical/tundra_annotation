@@ -48,3 +48,4 @@ export const AttributeNameHighlightColor = "highlight-color";
 export const HighlightTagName = "web-marker-highlight";
 export const cancelTruncation = "cancel-truncation";
 export const HighlightClassName = "annotate-highlighted-text";
+export const HightlightHover = "annotate-highlighted-text-hover";

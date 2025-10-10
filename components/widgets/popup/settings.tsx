@@ -133,7 +133,7 @@ const Settings = ({ className, children }: SettingsProps) => {
                     switchType={SwitchType.Horizontal}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="animate-shake text-red-500" />
               </FormItem>
             )}
           />
@@ -159,7 +159,7 @@ const Settings = ({ className, children }: SettingsProps) => {
                     deleteAll={false}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="animate-shake text-red-500" />
               </FormItem>
             )}
           />
@@ -187,7 +187,7 @@ const Settings = ({ className, children }: SettingsProps) => {
                     deleteAll={false}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="animate-shake text-red-500" />
               </FormItem>
             )}
           />
@@ -215,7 +215,7 @@ const Settings = ({ className, children }: SettingsProps) => {
                     deleteAll={false}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="animate-shake text-red-500" />
               </FormItem>
             )}
           />
@@ -241,7 +241,7 @@ const Settings = ({ className, children }: SettingsProps) => {
                     deleteAll={false}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="animate-shake text-red-500" />
               </FormItem>
             )}
           />
