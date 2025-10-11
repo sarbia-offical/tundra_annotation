@@ -67,7 +67,7 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
         align="start"
         onEscapeKeyDown={() => setIsPopoverOpen(false)}
       >
-        <Command shouldFilter={false} className="dark:bg-neutral-900">
+        <Command shouldFilter={false}>
           <SelectInput />
           {filteredOptions.length === 0 ? (
             <div className="p-3 text-center text-sm">

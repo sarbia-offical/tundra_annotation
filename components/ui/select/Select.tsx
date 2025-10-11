@@ -4,7 +4,7 @@ import { useSelect } from "./useSelect";
 import { SelectProvider } from "./SelectContext";
 import { SelectTrigger } from "./SelectTrigger";
 import { SelectContent } from "./SelectContent";
-import { Popover } from "@radix-ui/react-popover";
+import { Popover } from "@/components/ui/popover";
 import { useTranslation } from "react-i18next";
 
 const Select = React.forwardRef<SelectRef, SelectProps>((props, ref) => {

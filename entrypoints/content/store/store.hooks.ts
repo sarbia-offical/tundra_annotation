@@ -95,3 +95,39 @@ export const useColor = () => {
     setColor,
   };
 };
+
+/**
+ * 控制翻译弹窗显隐的hooks
+ * @returns
+ */
+export const useTranslationPopoverVisibility = () => {
+  const { translationPopoverVisible, dispatch } = useStore();
+
+  const showTranslationPopover = useCallback(() => {
+    dispatch({
+      type: "TRANSLATION_POPOVER_VISIBLE",
+      payload: true,
+    });
+  }, [dispatch]);
+
+  const hideTranslationPopover = useCallback(() => {
+    dispatch({
+      type: "TRANSLATION_POPOVER_VISIBLE",
+      payload: false,
+    });
+  }, [dispatch]);
+
+  const togglePopover = useCallback(() => {
+    dispatch({
+      type: "POPOVER_VISIBLE",
+      payload: !translationPopoverVisible,
+    });
+  }, [dispatch, translationPopoverVisible]);
+
+  return {
+    isVisible: translationPopoverVisible,
+    showTranslationPopover,
+    hideTranslationPopover,
+    togglePopover,
+  };
+};

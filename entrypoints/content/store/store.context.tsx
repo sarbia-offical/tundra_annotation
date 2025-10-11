@@ -33,6 +33,9 @@ const MarkStoreReducer = produce(
       case "CHANGE_COLOR":
         draft.color = action.payload;
         break;
+      case "TRANSLATION_POPOVER_VISIBLE":
+        draft.translationPopoverVisible = action.payload;
+        break;
     }
   }
 );

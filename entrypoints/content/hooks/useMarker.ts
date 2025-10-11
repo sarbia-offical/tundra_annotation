@@ -3,12 +3,10 @@ import { Marker } from "@/lib/Marks/Marker";
 import React from "react";
 
 type MarkerType = [
-  Marker | undefined,
   (highlightPainter: HighlightPainter, eventHandler: EventHandler) => Marker
 ];
 
 export function useMarker(): MarkerType {
-  const [markerInstance, setMarkerInstance] = useState<Marker | undefined>();
   const buildMarker = React.useCallback(
     (highlightPainter: HighlightPainter, eventHandler: EventHandler) => {
       const marker = new Marker({
@@ -16,10 +14,9 @@ export function useMarker(): MarkerType {
         highlightPainter,
         eventHandler,
       });
-      setMarkerInstance(marker);
       return marker;
     },
     []
   );
-  return [markerInstance, buildMarker];
+  return [buildMarker];
 }

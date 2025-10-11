@@ -5,7 +5,11 @@ import {
   selectionFocusRect,
   updatePopoverPosOnSelectionChange,
 } from "@/lib/SelectionObserver";
-import { usePopoverPosition, usePopoverVisibility } from "../store/store.hooks";
+import {
+  usePopoverPosition,
+  usePopoverVisibility,
+  useTranslationPopoverVisibility,
+} from "../store/store.hooks";
 import React from "react";
 
 export function useSelection(): [() => void] {

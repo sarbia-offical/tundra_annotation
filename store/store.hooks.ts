@@ -23,6 +23,16 @@ export const useDisplaySettings = () => {
   const setTheme = useCallback(
     (status?: THEME | null) => {
       dispatch({ type: "SET_THEME", payload: status || "" });
+      const shadowRoot =
+        typeof window !== "undefined"
+          ? document.querySelector("tundra-annotation")?.shadowRoot
+          : null;
+      const html = shadowRoot?.querySelector("html");
+      if (html) {
+        html.classList.remove("light");
+        html.classList.remove("dark");
+        html.classList.add(status || "light");
+      }
     },
     [dispatch]
   );

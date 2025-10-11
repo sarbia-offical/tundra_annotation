@@ -16,6 +16,10 @@ export type MarkStoreAction =
       payload: boolean;
     }
   | {
+      type: "TRANSLATION_POPOVER_VISIBLE";
+      payload: boolean;
+    }
+  | {
       type: "SHOW_POPOVER_AT_POSITION";
       payload: PopoverPositionType;
     }
@@ -30,6 +34,7 @@ export type MarkStoreAction =
 export interface MarkStoreType {
   popoverPosition: PopoverPositionType;
   popoverVisible: boolean;
+  translationPopoverVisible: boolean;
   color: string;
 }
 
@@ -41,5 +46,6 @@ export type MarkStoreContextType = MarkStoreType & {
 export const initialMarkStoreState: MarkStoreType = {
   popoverPosition: { x: 0, y: 0 },
   popoverVisible: false,
+  translationPopoverVisible: false,
   color: "",
 };

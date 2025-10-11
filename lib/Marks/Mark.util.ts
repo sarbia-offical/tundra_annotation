@@ -130,11 +130,13 @@ export const findLastChildTextNode = (node: Node | null): Node | null => {
     return node;
   }
   if (node.childNodes) {
-    for (let i = node.childNodes.length - 1; i >= 0; i--) {
-      if (isBlackListedElementNode(node.childNodes[i])) {
+    const reverseNodes = [...node.childNodes].reverse();
+    for (let i = 0; i < reverseNodes.length; i++) {
+      const element = reverseNodes[i];
+      if (isBlackListedElementNode(element)) {
         continue;
       }
-      const candidate = findLastChildTextNode(node.childNodes[i]);
+      const candidate = findLastChildTextNode(element);
       if (candidate !== null) {
         return candidate;
       }

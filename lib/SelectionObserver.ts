@@ -171,27 +171,33 @@ export function updatePopoverPosOnSelectionChange(
   rect: DOMRect,
   selectionIsBackwards: boolean
 ): Position {
+  // 强制触发重排，确保获取正确的滚动位置
+  const scrollX = window.scrollX || window.pageXOffset;
+  const scrollY = window.scrollY || window.pageYOffset;
+
   const position: Position = {
     x: 0,
     y: 0,
   };
+
   if (selectionIsBackwards) {
     if (isMobileOrTablet) {
-      position.y = rect.top + window.scrollY + 80;
+      position.y = rect.top + scrollY + 80;
     } else {
-      position.y = rect.top + window.scrollY - 20;
+      position.y = rect.top + scrollY - 20;
     }
   } else {
     if (isMobileOrTablet) {
-      position.y = rect.top + rect.height + window.scrollY + 50;
+      position.y = rect.top + rect.height + scrollY + 50;
     } else {
-      position.y = rect.top + rect.height + window.scrollY + 30;
+      position.y = rect.top + rect.height + scrollY + 30;
     }
   }
+
   if (selectionIsBackwards) {
-    position.x = rect.left + window.scrollX + 70;
+    position.x = rect.left + scrollX + 70;
   } else {
-    position.x = rect.right + window.scrollX - 70;
+    position.x = rect.right + scrollX - 70;
   }
 
   if (isMobileOrTablet) {
@@ -205,5 +211,6 @@ export function updatePopoverPosOnSelectionChange(
   if (position.x > document.documentElement.clientWidth - 76) {
     position.x = document.documentElement.clientWidth - 76;
   }
+
   return position;
 }

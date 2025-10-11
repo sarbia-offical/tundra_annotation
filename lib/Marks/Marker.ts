@@ -180,7 +180,6 @@ export class Marker {
       }
       endContainer = endContainer.parentElement as any;
     }
-
     if (
       blacklistedParentOfStartContainer &&
       blacklistedParentOfEndContainer &&
@@ -248,6 +247,7 @@ export class Marker {
    * @returns
    */
   private extractContextText(range: Range, charsToKeep: number) {
+    // 当前选中内容的前方文本
     let textBefore = "";
     const startContainer = range.startContainer;
     const startOffset = range.startOffset;
@@ -272,6 +272,7 @@ export class Marker {
       totalNumberOfBeforeCharsNumber -= nodeText.length;
     }
 
+    // 当前选中内容的后方文本
     let textAfter = "";
     const endContainer = range.endContainer;
     const endOffset = range.endOffset;
