@@ -4,7 +4,7 @@ import {
   StoreAction,
   TranslationContextType,
   TranslationPanelState,
-} from "./translationPanel.type";
+} from "./TranslationPanel.type";
 import { produce } from "immer";
 
 interface TranslationPanelProviderProps {

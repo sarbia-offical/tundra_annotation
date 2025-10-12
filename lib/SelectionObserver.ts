@@ -7,6 +7,7 @@ export interface Position {
 
 export class SelectionObserver {
   private _callback: (range: Range | null, event: Event) => void;
+  private _clickCallback: (event: Event) => void;
   private _document: Document;
   private _pendingCallback: number | null = null;
   private _eventHandler: (event: Event) => void;
@@ -34,9 +35,11 @@ export class SelectionObserver {
   }
   constructor(
     callback: (range: Range | null, event: Event) => void,
+    clickCallback: (event: Event) => void,
     observedNode?: Document
   ) {
     this._callback = callback;
+    this._clickCallback = clickCallback;
     this._document = observedNode || document;
     let isMouseDown = false;
     let events = ["mousedown", "mouseup", "selectionchange"];
@@ -50,6 +53,7 @@ export class SelectionObserver {
 
     this._eventHandler = (event: Event) => {
       if (event.type === "mousedown") {
+        this._clickCallback(event);
         isMouseDown = true;
       }
       if (event.type === "mouseup") {
@@ -174,31 +178,12 @@ export function updatePopoverPosOnSelectionChange(
   // 强制触发重排，确保获取正确的滚动位置
   const scrollX = window.scrollX || window.pageXOffset;
   const scrollY = window.scrollY || window.pageYOffset;
-
   const position: Position = {
     x: 0,
     y: 0,
   };
-
-  if (selectionIsBackwards) {
-    if (isMobileOrTablet) {
-      position.y = rect.top + scrollY + 80;
-    } else {
-      position.y = rect.top + scrollY - 20;
-    }
-  } else {
-    if (isMobileOrTablet) {
-      position.y = rect.top + rect.height + scrollY + 50;
-    } else {
-      position.y = rect.top + rect.height + scrollY + 30;
-    }
-  }
-
-  if (selectionIsBackwards) {
-    position.x = rect.left + scrollX + 70;
-  } else {
-    position.x = rect.right + scrollX - 70;
-  }
+  position.y = rect.top + scrollY + 30;
+  position.x = rect.left + scrollX + 70;
 
   if (isMobileOrTablet) {
     position.x = document.documentElement.clientWidth / 2;

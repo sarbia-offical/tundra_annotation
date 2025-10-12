@@ -1,5 +1,4 @@
 import React from "react";
-import { TransSelectorProps } from "react-i18next";
 
 export interface PopoverPositionType {
   x: number;

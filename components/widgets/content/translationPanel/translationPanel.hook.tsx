@@ -1,9 +1,7 @@
-import { stat } from "fs";
-import { useStore } from "./translationPanel.context";
-import { TranslationPanelProps } from "./translationPanel.type";
+import { TranslationPanelProps } from "./TranslationPanel.type";
 import { CSSProperties } from "react";
 
-export const usePopoverPosition = (props: TranslationPanelProps) => {
+export const useTranslationPopover = (props: TranslationPanelProps) => {
   const { position, translateText, isPopoverOpen } = props;
   const positionStyle = useMemo<CSSProperties>(() => {
     const { x, y } = position;
@@ -16,6 +14,7 @@ export const usePopoverPosition = (props: TranslationPanelProps) => {
   const visible = useMemo<boolean>(() => isPopoverOpen, [isPopoverOpen]);
   const textContext = useMemo<string>(() => translateText, [translateText]);
   return {
+    ...props,
     positionStyle,
     visible,
     textContext,

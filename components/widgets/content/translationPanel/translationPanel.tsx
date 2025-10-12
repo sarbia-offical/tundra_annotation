@@ -7,15 +7,16 @@ import React from "react";
 import {
   TranslationPanelProps,
   TranslationPanelRef,
-} from "./translationPanel.type";
-import { StoreProvider } from "./translationPanel.context";
-import { usePopoverPosition } from "./translationPanel.hook";
+} from "./TranslationPanel.type";
+import { StoreProvider } from "./TranslationPanel.context";
+import { useTranslationPopover } from "./TranslationPanel.hook";
 
 const TranslationPanel = React.forwardRef<
   TranslationPanelRef,
   TranslationPanelProps
 >((props, ref) => {
-  const { positionStyle, visible, textContext } = usePopoverPosition(props);
+  const { positionStyle, visible, textContext, children } =
+    useTranslationPopover(props);
 
   React.useImperativeHandle(ref, () => ({
     open: () => {},
@@ -30,7 +31,7 @@ const TranslationPanel = React.forwardRef<
             ...positionStyle,
           }}
         >
-          <Popover open={true}>
+          <Popover open={true} modal={false}>
             <PopoverTrigger asChild>
               <div />
             </PopoverTrigger>
@@ -40,6 +41,7 @@ const TranslationPanel = React.forwardRef<
                   <h4 className="leading-none font-medium">translate</h4>
                   <p className="text-muted-foreground text-sm">{textContext}</p>
                 </div>
+                {children}
               </div>
             </PopoverContent>
           </Popover>

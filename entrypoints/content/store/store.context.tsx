@@ -23,18 +23,8 @@ const MarkStoreReducer = produce(
       case "POPOVER_VISIBLE":
         draft.popoverVisible = action.payload;
         break;
-      case "SHOW_POPOVER_AT_POSITION":
-        draft.popoverPosition = action.payload;
-        draft.popoverVisible = true;
-        break;
-      case "HIDE_POPOVER":
-        draft.popoverVisible = false;
-        break;
-      case "CHANGE_COLOR":
-        draft.color = action.payload;
-        break;
-      case "TRANSLATION_POPOVER_VISIBLE":
-        draft.translationPopoverVisible = action.payload;
+      case "SET_TRANSLATION_TEXT":
+        draft.translationText = action.payload;
         break;
     }
   }

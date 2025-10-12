@@ -1,1 +1,1 @@
-export { TranslationPanel } from "./translationPanel";
+export { TranslationPanel } from "./TranslationPanel";

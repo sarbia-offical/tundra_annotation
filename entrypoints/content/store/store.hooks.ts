@@ -74,60 +74,23 @@ export const usePopoverVisibility = () => {
 };
 
 /**
- * 控制弹窗显隐的hooks
- * @returns
+ * 设置翻译文本
  */
-export const useColor = () => {
-  const { color, dispatch } = useStore();
-
-  const setColor = useCallback(
-    (color: string) => {
+export const useTranslationText = () => {
+  const { translationText, dispatch } = useStore();
+  // const text = useMemo(() => translationText, [translationText]);
+  const setTranslationText = useCallback(
+    (value: string) => {
       dispatch({
-        type: "CHANGE_COLOR",
-        payload: color,
+        type: "SET_TRANSLATION_TEXT",
+        payload: value,
       });
     },
     [dispatch]
   );
 
   return {
-    color,
-    setColor,
-  };
-};
-
-/**
- * 控制翻译弹窗显隐的hooks
- * @returns
- */
-export const useTranslationPopoverVisibility = () => {
-  const { translationPopoverVisible, dispatch } = useStore();
-
-  const showTranslationPopover = useCallback(() => {
-    dispatch({
-      type: "TRANSLATION_POPOVER_VISIBLE",
-      payload: true,
-    });
-  }, [dispatch]);
-
-  const hideTranslationPopover = useCallback(() => {
-    dispatch({
-      type: "TRANSLATION_POPOVER_VISIBLE",
-      payload: false,
-    });
-  }, [dispatch]);
-
-  const togglePopover = useCallback(() => {
-    dispatch({
-      type: "POPOVER_VISIBLE",
-      payload: !translationPopoverVisible,
-    });
-  }, [dispatch, translationPopoverVisible]);
-
-  return {
-    isVisible: translationPopoverVisible,
-    showTranslationPopover,
-    hideTranslationPopover,
-    togglePopover,
+    translationText,
+    setTranslationText,
   };
 };
