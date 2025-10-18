@@ -20,5 +20,6 @@
   "mentions": "Mentions",
   "pinMessage": "Pin Annotation Panel",
   "noMoreNotes": "No more notes for now.",
-  "underConstruction": "The page is under construction."
+  "underConstruction": "The page is under construction.",
+  "i18n_Translation": "Translation"
 }

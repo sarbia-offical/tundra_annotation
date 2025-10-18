@@ -4,10 +4,12 @@ import { useMarker } from "./useMarker";
 import { HightlightHover, Context } from "@/lib/Marks/Mark.type";
 import { Marker } from "@/lib/Marks/Marker";
 import { applyHighlightStyle, createWavyLines } from "@/lib/utils";
+import { useSetTriggeringExistingMark } from "../store/store.hooks";
 
 export const useMarkerInitialization = () => {
   const markRef = useRef<Marker | null>(null);
   const { startObserver } = useSelection();
+  const { setTriggeringExistingMark } = useSetTriggeringExistingMark();
   const [buildMarker] = useMarker();
 
   // 启动高亮
@@ -32,7 +34,17 @@ export const useMarkerInitialization = () => {
               const { scrollX, scrollY } = window;
               const rect =
                 allElements[allElements.length - 1].getClientRects()[0];
-              console.log(context.serializedRange.text);
+              const { text } = context.serializedRange;
+              let position = {
+                x: rect.left + scrollX + 70,
+                y: rect.top + scrollY + 30,
+              };
+              setTriggeringExistingMark({
+                translationText: text,
+                popoverVisible: true,
+                popoverPosition: position,
+                currentMark: context.serializedRange,
+              });
             }
           },
           onHighlightHover(

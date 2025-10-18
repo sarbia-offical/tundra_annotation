@@ -7,7 +7,7 @@ import {
   ColorSelectorRef,
 } from "./ColorSelector.type";
 import { useColorSelector } from "./ColorSelector.hook";
-import { ColorSelectorProvider } from "./colorSelector.context";
+import { ColorSelectorProvider } from "./ColorSelector.context";
 import { cn } from "@/lib/utils";
 
 const ColorSelector = React.forwardRef<ColorSelectorRef, ColorSelectorProps>(

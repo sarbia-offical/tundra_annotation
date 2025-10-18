@@ -1,5 +1,6 @@
+import { SerializedRange } from "@/lib/Marks/Mark.type";
 import { useStore } from "./store.context";
-import { PopoverPositionType } from "./store.type";
+import { PopoverPositionType, TriggeringExistingMarkType } from "./store.type";
 
 /**
  * 控制弹窗位置的hooks
@@ -92,5 +93,44 @@ export const useTranslationText = () => {
   return {
     translationText,
     setTranslationText,
+  };
+};
+
+/**
+ * 设置当前选中的Mark
+ */
+export const useCurrentmark = () => {
+  const { currentMark, dispatch } = useStore();
+  const setCurrentMark = useCallback(
+    (value: SerializedRange) => {
+      dispatch({
+        type: "SET_CURRENT_MARK",
+        payload: value,
+      });
+    },
+    [dispatch]
+  );
+  return {
+    currentMark,
+    setCurrentMark,
+  };
+};
+
+/**
+ * 设置弹窗的位置、翻译文本、是否显隐、当前的标记
+ */
+export const useSetTriggeringExistingMark = () => {
+  const { dispatch } = useStore();
+  const setTriggeringExistingMark = useCallback(
+    (value: TriggeringExistingMarkType) => {
+      dispatch({
+        type: "TRIGGERING_EXISTING_MARK",
+        payload: value,
+      });
+    },
+    [dispatch]
+  );
+  return {
+    setTriggeringExistingMark,
   };
 };

@@ -10,14 +10,16 @@ import {
 } from "./TranslationPanel.type";
 import { StoreProvider } from "./TranslationPanel.context";
 import { useTranslationPopover } from "./TranslationPanel.hook";
+import { useTranslation } from "react-i18next";
+import { Languages } from "lucide-react";
 
 const TranslationPanel = React.forwardRef<
   TranslationPanelRef,
   TranslationPanelProps
 >((props, ref) => {
-  const { positionStyle, visible, textContext, children } =
+  const { positionStyle, visible, textContext, children, className } =
     useTranslationPopover(props);
-
+  const { t } = useTranslation();
   React.useImperativeHandle(ref, () => ({
     open: () => {},
     close: () => {},
@@ -26,7 +28,7 @@ const TranslationPanel = React.forwardRef<
     <StoreProvider initialConfig={props}>
       {visible ? (
         <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${className}`}
           style={{
             ...positionStyle,
           }}
@@ -38,7 +40,9 @@ const TranslationPanel = React.forwardRef<
             <PopoverContent className="z-[1000] dark:bg-neutral-900">
               <div className="grid gap-4">
                 <div className="space-y-2">
-                  <h4 className="leading-none font-medium">translate</h4>
+                  <h4 className="leading-none font-medium ">
+                    <Languages />
+                  </h4>
                   <p className="text-muted-foreground text-sm">{textContext}</p>
                 </div>
                 {children}

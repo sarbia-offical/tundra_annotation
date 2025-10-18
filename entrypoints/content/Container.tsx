@@ -30,7 +30,6 @@ const Container: React.FC = () => {
       >
         <ColorSelector
           onValueChange={(value: string) => {
-            console.log("value", value);
             setColor(value);
           }}
         />

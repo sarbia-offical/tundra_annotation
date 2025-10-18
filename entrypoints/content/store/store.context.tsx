@@ -6,6 +6,7 @@ import {
   MarkStoreType,
 } from "./store.type";
 import { produce } from "immer";
+import { SerializedRange } from "@/lib/Marks/Mark.type";
 
 interface MarkStoreProviderProps {
   children: React.ReactNode;
@@ -25,7 +26,20 @@ const MarkStoreReducer = produce(
         break;
       case "SET_TRANSLATION_TEXT":
         draft.translationText = action.payload;
+      case "SET_CURRENT_MARK":
+        draft.currentMark = action.payload as SerializedRange;
         break;
+      case "TRIGGERING_EXISTING_MARK":
+        const {
+          currentMark,
+          popoverVisible,
+          popoverPosition,
+          translationText,
+        } = action.payload;
+        draft.currentMark = currentMark;
+        draft.popoverVisible = popoverVisible;
+        draft.popoverPosition = popoverPosition;
+        draft.translationText = translationText;
     }
   }
 );

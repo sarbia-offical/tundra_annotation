@@ -30,7 +30,8 @@ export function useSelection(): { startObserver: () => void } {
           if (
             !(
               target instanceof Element &&
-              target.tagName.toLowerCase() === "tundra-annotation"
+              (target.tagName.toLowerCase() === "tundra-annotation" ||
+                target.tagName.toLowerCase() === "web-marker-highlight")
             )
           ) {
             hidePopover();

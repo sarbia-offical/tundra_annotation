@@ -4,17 +4,14 @@ import { useVirtualList } from "./virtualList.hook";
 import { VirtualListProvider } from "./virtualList.context";
 import { VirtualInner } from "./virtualInner";
 
-function VirtualListInnner<T>(
-  props: VirtualListProps<T>,
-  ref: React.Ref<VirtualListRef>
-) {
+function VirtualListInnner<T>(props: VirtualListProps<T>) {
   const value = useVirtualList(props);
-  const { height, containerRef, style } = value;
+  const { height, containerRef, style, className } = value;
   return (
     <VirtualListProvider value={value}>
       <div
         ref={containerRef}
-        className="relative overflow-auto will-change-transform"
+        className={`relative overflow-auto will-change-transform ${className}`}
         style={{
           ...style,
           height: height,

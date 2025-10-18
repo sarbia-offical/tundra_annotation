@@ -6,6 +6,8 @@ import ReactDOM from "react-dom/client";
 import { MarkStoreProvider } from "./store/store.context";
 import globalStyle from "./globalStyle.css?raw";
 import "./style.css";
+import { NotificationProvider } from "@/components/ui/notification/notification.context";
+import { NotificationContainer } from "@/components/ui/notification/notification";
 
 const injectGlobalStyles = () => {
   if (document.getElementById("global-annotate-styles")) return;
@@ -30,7 +32,10 @@ export default defineContentScript({
         root.render(
           <StoreProvider>
             <MarkStoreProvider>
-              <Container />
+              <NotificationProvider config={{ maxCount: 3, duration: 3000 }}>
+                <Container />
+                <NotificationContainer />
+              </NotificationProvider>
             </MarkStoreProvider>
           </StoreProvider>
         );
