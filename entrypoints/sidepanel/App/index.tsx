@@ -7,7 +7,6 @@ import { SettingsPage } from "@/entrypoints/sidepanel/Setting/index";
 import { Account } from "@/entrypoints/sidepanel/Account/index";
 import { useTranslation } from "react-i18next";
 import { SidebarType } from "@/entrypoints/type";
-import DotMatrix from "@/components/dotMatrix";
 import Header from "@/entrypoints/sidepanel/Header/index";
 import { useAppInconContext } from "@/state/hooks";
 import { AppInfoState } from "@/state/type";
@@ -47,7 +46,6 @@ export default () => {
             }}
           />
           <main className="flex-1 overflow-auto mr-14 p-4 relative">
-            <DotMatrix />
             <div className="p-4 h-full">
               {sidebarType === SidebarType.HOME && <Home />}
               {sidebarType === SidebarType.SETTINGS && <SettingsPage />}

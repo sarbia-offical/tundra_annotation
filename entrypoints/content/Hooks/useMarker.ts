@@ -5,19 +5,19 @@ import { useState } from "react";
 
 type UseMarkerType = [
   Marker | undefined,
-  (eventHandler: EventHandler, highlightPainter: HighlightPainter) => Marker
+  (highlightPainter: HighlightPainter, eventHandler: EventHandler) => Marker
 ];
 
 export function useMarker(): UseMarkerType {
   const [markerInstance, setMarkerInstance] = useState<Marker | undefined>();
   const startMarker = (
-    eventHandler: EventHandler,
-    highlightPainter: HighlightPainter
+    highlightPainter: HighlightPainter,
+    eventHandler: EventHandler
   ): Marker => {
     const marker = new Marker({
       rootElement: document.body,
-      eventHandler,
       highlightPainter,
+      eventHandler,
     });
     setMarkerInstance(marker);
     return marker;

@@ -104,9 +104,6 @@ export class SelectionObserver {
     }
   }
 
-  /**
-   * 销毁观察者，清理资源
-   */
   disconnect() {
     for (const event of this._events) {
       this._document.removeEventListener(event, this._eventHandler);

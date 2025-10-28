@@ -13,7 +13,7 @@ const DialogTrigger = DialogPrimitive.Trigger;
 const DialogClose = DialogPrimitive.Close;
 
 const DialogPortal = ({ children }: { children: React.ReactNode }) => {
-  const shadowRoot = document.querySelector("dolphin-memory")?.shadowRoot;
+  const shadowRoot = document.querySelector("tundra-annotation")?.shadowRoot;
   const body = shadowRoot?.querySelector("body");
   return body ? (
     ReactDOM.createPortal(children, body)

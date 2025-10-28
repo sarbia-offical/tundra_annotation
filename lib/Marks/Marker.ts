@@ -98,11 +98,6 @@ class Marker {
       return item.getAttribute(AttributeNameHighlightId) === highlightId;
     }) as HTMLElement[];
     return elements;
-    // return Array.from(
-    //   this.document.getElementsByTagName(HighlightBlacklistedElementClassName)
-    // ).filter((item) => {
-    //   return item.getAttribute(AttributeNameHighlightId) === highlightId;
-    // }) as HTMLElement[];
   }
 
   private static normalizeText(s: string) {
@@ -580,52 +575,15 @@ class Marker {
     }
   };
 
-  mouseoverListener = (e: Event) => {
-    if (!e.target || !(e.target instanceof (this.window as any).HTMLElement)) {
-      return;
-    }
-
-    const target = e.target as HTMLElement;
-    let newHoverId = target?.getAttribute(AttributeNameHighlightId);
-    console.log(
-      "this.state.lastHoverId === newHoverId",
-      this.state.lastHoverId,
-      newHoverId
-    );
-
-    if (this.state.lastHoverId === newHoverId) {
-      return;
-    }
-    const oldHoverId = this.state.lastHoverId;
-    this.state.lastHoverId = newHoverId as string;
-
-    if (newHoverId) {
-      this.highlightHovering(newHoverId, true, e);
-    }
-    if (oldHoverId) {
-      this.highlightHovering(oldHoverId, false, e);
-    }
-  };
-
   /**
    * 开启高亮点击事件监听
    */
   public addEventListeners() {
     this.rootElement.addEventListener("click", this.clickListener, true);
-    // this.rootElement.addEventListener(
-    //   "mouseover",
-    //   this.mouseoverListener,
-    //   true
-    // );
   }
 
   public removeEventListeners() {
     this.rootElement.removeEventListener("click", this.clickListener, true);
-    this.rootElement.removeEventListener(
-      "mouseover",
-      this.mouseoverListener,
-      true
-    );
   }
 
   public paintHighlights(highlightId: string) {

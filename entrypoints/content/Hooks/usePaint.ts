@@ -25,6 +25,8 @@ export const useTextHighlighter = () => {
         uid,
         createDate,
       });
+      console.log("serializedRange", serializedRange);
+
       if (!serializedRange) return;
       markState.changeAnnotations(uid, serializedRange);
       markState.changeColor("");

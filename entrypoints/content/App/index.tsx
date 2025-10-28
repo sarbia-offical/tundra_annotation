@@ -31,7 +31,12 @@ import { Annotate } from "@/services/api.type";
 import { getNormalizedUrl, createWavyLines } from "@/lib/Utils";
 import { createRoot } from "react-dom/client";
 import { isEmpty, isNil } from "lodash";
-import { addAnnotate, getAnnotations } from "@/services/api";
+import {
+  addAnnotate,
+  getAnnotations,
+  updateAnnotate,
+  deleteAnnotate,
+} from "@/services/api";
 import { AnnotateContext } from "./AppContext";
 import { EditAnnotateProvider } from "../AnnotateDom/EditAnnotationContext";
 import "./index.module.css";
@@ -120,6 +125,7 @@ export default () => {
           updateDate: moment().valueOf(),
         };
         markState.changeAnnotations(annotateUid, annotation);
+        updateAnnotate(annotation);
         if (markerInstance) {
           markerInstance.unpaint(annotateUid);
           markerInstance.paint(annotation);
@@ -134,8 +140,30 @@ export default () => {
       markerInstance?.unpaint(annotateUid);
       setOpenEditAnnotate(false);
       markState.changeAnnotations(annotateUid);
+      deleteAnnotate(annotateUid);
     }
   }, [markerInstance, annotateUid, markState]);
+
+  const handleColorChange = useCallback(
+    (color: string) => {
+      if (annotateUid && markerInstance) {
+        // Clone the annotation to avoid mutating a frozen object
+        let annotation = { ...(markState.annotations[annotateUid] || {}) };
+        annotation = {
+          ...annotation,
+          color,
+          updateDate: moment().valueOf(),
+        };
+        markState.changeAnnotations(annotateUid, annotation);
+        updateAnnotate(annotation);
+        if (markerInstance) {
+          markerInstance.unpaint(annotateUid);
+          markerInstance.paint(annotation);
+        }
+      }
+    },
+    [markState.annotations, annotateUid, markerInstance]
+  );
 
   const openEditor = (uid: string) => {
     setAnnotateUid(uid);
@@ -232,6 +260,14 @@ export default () => {
       startObserver();
       const marker = startMarker(
         {
+          paintHighlight: (context: Context, element: HTMLElement) => {
+            const bgc =
+              element.getAttribute(AttributeNameHighlightColor) || "#ffff00";
+            applyHighlightStyle(element, bgc);
+            renderAnnotationIconIfNeeded(element, context);
+          },
+        },
+        {
           onHighlightClick: (
             context: Context,
             _ele: HTMLElement,
@@ -240,14 +276,6 @@ export default () => {
             const { uid, color } = context.serializedRange;
             openEditor(uid);
             markState.changeColor(color);
-          },
-        },
-        {
-          paintHighlight: (context: Context, element: HTMLElement) => {
-            const bgc =
-              element.getAttribute(AttributeNameHighlightColor) || "#ffff00";
-            applyHighlightStyle(element, bgc);
-            renderAnnotationIconIfNeeded(element, context);
           },
         }
       );
@@ -322,7 +350,7 @@ export default () => {
   }, [appState.defaultEnabled, appState.isLoaded]);
 
   useEffect(() => {
-    const shadowRoot = document.querySelector("dolphin-memory")?.shadowRoot;
+    const shadowRoot = document.querySelector("tundra-annotation")?.shadowRoot;
     const body = shadowRoot?.querySelector("body");
     if (body) {
       body.className = themeClass;
@@ -355,6 +383,7 @@ export default () => {
           setOpen={setOpenEditAnnotate}
           handleDelete={handleDeleteAnnotation}
           onFormSubmit={handleFormSubmit}
+          onColorChange={handleColorChange}
           close={() => {
             markState.changeCurrentAnnotation("");
           }}

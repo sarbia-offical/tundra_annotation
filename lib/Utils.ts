@@ -58,14 +58,8 @@ export const generateUUID = () => {
 };
 
 export function getNormalizedUrl() {
-  const href = window.location.href;
-  const hashIndex = href.indexOf("#");
-  if (hashIndex === -1) return href;
-  const queryIndex = href.indexOf("?");
-  if (queryIndex > hashIndex) {
-    return href.slice(0, hashIndex) + href.slice(queryIndex);
-  }
-  return href.slice(0, hashIndex);
+  const url = new URL(window.location.href);
+  return `${url.protocol}//${url.host}${url.pathname}`;
 }
 
 export const isMobileOrTablet = (function () {

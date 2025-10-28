@@ -39,6 +39,8 @@ interface EditAnnotationType {
   handleDelete: () => Promise<boolean> | void;
   // 添加表单数据回调
   onFormSubmit?: (values: AnnotateFormValue) => void;
+  // 颜色修改回调
+  onColorChange?: (color: string) => void;
 }
 
 export const EditAnnotation: React.FC<EditAnnotationType> = ({
@@ -48,6 +50,7 @@ export const EditAnnotation: React.FC<EditAnnotationType> = ({
   close,
   handleDelete,
   onFormSubmit,
+  onColorChange,
 }) => {
   const annotateFormRef = useRef<AnnotateFormRef>(null);
   const [annotationList, setAnnotationList] = useState<NoteItem[]>([]);
@@ -112,6 +115,10 @@ export const EditAnnotation: React.FC<EditAnnotationType> = ({
             className="p-2"
             onChange={(c) => {
               markState.changeColor(c);
+              // 调用颜色修改回调函数，同步到 IndexedDB
+              if (onColorChange) {
+                onColorChange(c);
+              }
             }}
           />
           <AnnotateForm

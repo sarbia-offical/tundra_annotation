@@ -1,7 +1,4 @@
 import { HighlightTagName } from "@/lib/Marks/Marker.type";
-import gsap from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-gsap.registerPlugin(ScrollToPlugin);
 
 export const useScrollToAnnotation = () => {
   const scrollToAnnotation = (id?: string) => {
@@ -21,6 +18,7 @@ export const useScrollToAnnotation = () => {
     if (!element) {
       return;
     }
+
     // 延迟滚动，确保页面已经渲染完成
     setTimeout(() => {
       // 获取元素的位置信息，并计算出平滑滚动的目标位置
@@ -28,12 +26,14 @@ export const useScrollToAnnotation = () => {
       if (rect.top === 0) {
         return;
       }
+
       // 滚动到该元素的位置，减去偏移量 100px
       const targetY = rect.top + window.scrollY - 100;
-      gsap.to(window, {
-        duration: 0.3,
-        scrollTo: { y: targetY },
-        ease: "none",
+
+      // 使用原生的平滑滚动
+      window.scrollTo({
+        top: targetY,
+        behavior: "smooth",
       });
     }, 0); // 立即执行，但确保 DOM 完成渲染
   };

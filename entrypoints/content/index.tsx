@@ -21,7 +21,7 @@ export default defineContentScript({
   async main(ctx) {
     initTranslations(i18nConfig.defaultLocale, ["common", "content"]);
     const ui = await createShadowRootUi(ctx, {
-      name: "dolphin-memory",
+      name: "tundra-annotation",
       position: "inline",
       inheritStyles: true,
       onMount: (container) => {

@@ -35,13 +35,12 @@ export async function getAnnotations(
 }
 
 export async function updateAnnotate(
-  uid: string,
   data: Partial<Annotate>
 ): Promise<APIResponse<Annotate>> {
-  const request: APIRequest<{ uid: string; data: Partial<Annotate> }> = {
+  const request: APIRequest<{ data: Partial<Annotate> }> = {
     basicType: "annotate",
     messageType: "updateAnnotate",
-    params: { uid, data },
+    params: { data },
   };
   return sendMessageToBackground(request);
 }
@@ -49,10 +48,10 @@ export async function updateAnnotate(
 export async function deleteAnnotate(
   uid: string
 ): Promise<APIResponse<string>> {
-  const request: APIRequest<string> = {
+  const request: APIRequest<{ uid: string }> = {
     basicType: "annotate",
     messageType: "deleteAnnotate",
-    params: uid,
+    params: { uid },
   };
   return sendMessageToBackground(request);
 }

@@ -19,7 +19,7 @@ export const AnnotationSetting: React.FC<AnnotationSettingProps> = ({
   changeItem,
 }) => {
   const { t } = useTranslation();
-  const shadowRoot = document.querySelector("dolphin-memory")?.shadowRoot;
+  const shadowRoot = document.querySelector("tundra-annotation")?.shadowRoot;
   const handleEditAnnotation = () => {
     changeItem && changeItem();
   };

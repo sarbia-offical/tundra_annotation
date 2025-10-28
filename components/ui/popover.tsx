@@ -14,7 +14,7 @@ const PopoverContent = React.forwardRef<
 >(({ className, align = "center", sideOffset = 4, ...props }, ref) => {
   const shadowRoot =
     typeof window !== "undefined"
-      ? document.querySelector("dolphin-memory")?.shadowRoot
+      ? document.querySelector("tundra-annotation")?.shadowRoot
       : null;
 
   const content = (

@@ -3,33 +3,33 @@ import { z, ZodType } from "zod";
 import { i18nParse } from "@/lib/Utils";
 // 密码校验规则类型
 type PasswordRule = {
-  validate: (value: string) => boolean;
-  message: string;
-  value?: string[]; // 可选的值，用于某些规则（如最小字符数）
+  validate: (value: string) => boolean; // 校验的条件
+  i18nConfigurationName: string; // i18n配置的名称
+  i18nConfigurationValue?: string[]; // 用于替换i18n配置里的占位字符
 };
 
 // 默认规则配置
 const defaultPasswordRules: PasswordRule[] = [
   {
     validate: (val: string) => /[A-Z]/.test(val),
-    message: "passwordRuleUppercase",
-    value: ["1"],
+    i18nConfigurationName: "passwordRuleUppercase",
+    i18nConfigurationValue: ["1"],
   },
   {
     validate: (val: string) => /[a-z]/.test(val),
-    message: "passwordRuleLowercase",
-    value: ["1"],
+    i18nConfigurationName: "passwordRuleLowercase",
+    i18nConfigurationValue: ["1"],
   },
   {
     validate: (val: string) => /[0-9]/.test(val),
-    message: "passwordRuleNumber",
-    value: ["1"],
+    i18nConfigurationName: "passwordRuleNumber",
+    i18nConfigurationValue: ["1"],
   },
   {
     validate: (val: string) =>
       /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(val),
-    message: "passwordRuleSpecial",
-    value: ["1"],
+    i18nConfigurationName: "passwordRuleSpecial",
+    i18nConfigurationValue: ["1"],
   },
 ];
 
@@ -59,7 +59,10 @@ export function createPasswordSchema(
           allValid = false;
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: i18nParse(t(rule.message), rule.value || []),
+            message: i18nParse(
+              t(rule.i18nConfigurationName),
+              rule.i18nConfigurationValue || []
+            ),
             path: [`rule_${index}`],
           });
         }
