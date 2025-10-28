@@ -56,8 +56,6 @@ export const createMarkStore = (options: DeepPartial<Mark>) => {
         },
         initAllAnnotations(annotations: Record<string, any>) {
           set((state) => {
-            console.log('keyBy(annotations, "uid")', keyBy(annotations, "uid"));
-
             state.annotations = keyBy(annotations, "uid");
           });
         },

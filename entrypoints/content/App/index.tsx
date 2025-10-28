@@ -110,8 +110,8 @@ export default () => {
           : [];
         const date = moment().valueOf();
         notes.push({
-          userId: "231311",
-          userName: "userName",
+          userId: "111111",
+          userName: "administrator",
           text: values.annotate,
           date,
           isMe: true,
