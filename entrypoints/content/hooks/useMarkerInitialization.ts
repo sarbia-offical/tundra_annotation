@@ -4,76 +4,74 @@ import { useMarker } from "./useMarker";
 import { HightlightHover, Context } from "@/lib/Marks/Mark.type";
 import { Marker } from "@/lib/Marks/Marker";
 import { applyHighlightStyle, createWavyLines } from "@/lib/utils";
-import { useSetTriggeringExistingMark } from "../store/store.hooks";
+import { useCurrentmark } from "../store/store.hooks";
 
 export const useMarkerInitialization = () => {
   const markRef = useRef<Marker | null>(null);
   const { startObserver } = useSelection();
-  const { setTriggeringExistingMark } = useSetTriggeringExistingMark();
   const [buildMarker] = useMarker();
+
+  // 通过 uid 切换高亮元素的 hover 状态
+  const toggleHighlightHover = (uid: string | undefined, isHover: boolean) => {
+    if (!uid) return;
+
+    const elements = document.querySelectorAll(`[highlight-id="${uid}"]`);
+
+    if (elements && elements.length > 0) {
+      elements.forEach((ele: Element) => {
+        if (ele instanceof HTMLElement) {
+          if (isHover) {
+            ele.classList.add(HightlightHover);
+          } else {
+            ele.classList.remove(HightlightHover);
+          }
+        }
+      });
+    }
+  };
 
   // 启动高亮
   useEffect(() => {
     startObserver();
-    if (!markRef.current) {
-      const marker = buildMarker(
-        {
-          paintHighlight: (context: Context, element: HTMLElement) => {
-            const bgc = context?.serializedRange?.color || "#ffff00";
-            const wavyBg = createWavyLines(bgc);
-            applyHighlightStyle(element, bgc, wavyBg);
-          },
+    const marker = buildMarker(
+      {
+        paintHighlight: (context: Context, element: HTMLElement) => {
+          const bgc = context?.serializedRange?.color || "#ffff00";
+          const wavyBg = createWavyLines(bgc);
+          applyHighlightStyle(element, bgc, wavyBg);
         },
-        {
-          onHighlightClick: (
-            context: Context,
-            allElements: HTMLElement[],
-            e: Event
-          ) => {
-            if (allElements && allElements.length > 0) {
-              const { scrollX, scrollY } = window;
-              const rect =
-                allElements[allElements.length - 1].getClientRects()[0];
-              const { text } = context.serializedRange;
-              let position = {
-                x: rect.left + scrollX + 70,
-                y: rect.top + scrollY + 30,
-              };
-              setTriggeringExistingMark({
-                translationText: text,
-                popoverVisible: true,
-                popoverPosition: position,
-                currentMark: context.serializedRange,
-              });
-            }
-          },
-          onHighlightHover(
-            context: Context,
-            allElements: HTMLElement[],
-            e: Event
-          ) {
-            if (allElements && allElements.length > 0) {
-              allElements.forEach((ele: HTMLElement) => {
-                ele.classList.add(HightlightHover);
-              });
-            }
-          },
-          onHighlightLeave(
-            context: Context,
-            allElements: HTMLElement[],
-            e: Event
-          ) {
-            if (allElements && allElements.length > 0) {
-              allElements.forEach((ele: HTMLElement) => {
-                ele.classList.remove(HightlightHover);
-              });
-            }
-          },
-        }
-      );
-      marker.addEventListeners();
-      markRef.current = marker;
-    }
+      },
+      {
+        onHighlightClick: (
+          context: Context,
+          allElements: HTMLElement[],
+          e: Event
+        ) => {
+          if (allElements && allElements.length > 0) {
+            console.log("onHighlightClick", context);
+            console.log("allElements", allElements);
+          }
+        },
+        // 实现鼠标hover，底部波浪线滚动的效果
+        onHighlightHover(
+          context: Context,
+          _allElements: HTMLElement[],
+          _e: Event
+        ) {
+          toggleHighlightHover(context?.serializedRange?.uid, true);
+        },
+        // 实现鼠标移出，取消底部波浪线滚动的效果
+        onHighlightLeave(
+          context: Context,
+          _allElements: HTMLElement[],
+          _e: Event
+        ) {
+          toggleHighlightHover(context?.serializedRange?.uid, false);
+        },
+      }
+    );
+    marker.addEventListeners();
+    markRef.current = marker;
   }, [startObserver, buildMarker]);
 
   return {

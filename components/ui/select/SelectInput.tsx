@@ -1,9 +1,8 @@
 import { CommandInput } from "@/components/ui/command";
 import React from "react";
 import { useSelectContext } from "./SelectContext";
-import { cn } from "@/lib/utils";
+import { cn, debounce } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
-import { debounce } from "lodash";
 
 interface SelectInputProps
   extends React.ComponentPropsWithoutRef<typeof CommandInput> {

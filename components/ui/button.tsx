@@ -22,6 +22,7 @@ const buttonVariants = cva(
         link: "text-neutral-900 underline-offset-4 hover:underline dark:text-neutral-50",
         success:
           "bg-green-500 text-white hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700",
+        icon: "rounded-full hover:bg-neutral-100 hover:text-neutral-900 dark:hover:bg-neutral-800 dark:hover:text-neutral-50",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -29,6 +30,8 @@ const buttonVariants = cva(
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
         icon: "h-10 w-10",
+        iconSm: "h-8 w-8",
+        iconMini: "h-6 w-6",
       },
     },
     defaultVariants: {

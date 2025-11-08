@@ -23,9 +23,29 @@ export default defineConfig({
     description: "__MSG_extDescription__",
     default_locale: "en",
   },
-  vite: () => ({
+  analysis: {
+    enabled: true,
+  },
+  vite: (env) => ({
     define: {
       "process.env.APP_VERSION": JSON.stringify(appInfo.version),
+    },
+    build: {
+      minify: "esbuild",
+      target: "esnext",
+      cssMinify: true,
+      rollupOptions: {
+        output: {
+          compact: true,
+        },
+      },
+    },
+    esbuild: {
+      drop: env.command === "build" ? ["console", "debugger"] : [],
+      legalComments: "none",
+      minifyIdentifiers: true,
+      minifySyntax: true,
+      minifyWhitespace: true,
     },
   }),
   modules: ["@wxt-dev/module-react"],

@@ -14,8 +14,12 @@ import React from "react";
 
 export function useSelection(): { startObserver: () => void } {
   const { setPosition } = usePopoverPosition();
-  const { hidePopover, showPopover } = usePopoverVisibility();
+  const { hidePopover, showPopover, isVisible } = usePopoverVisibility();
   const { setTranslationText } = useTranslationText();
+  const isVisibleRef = React.useRef(isVisible);
+  useEffect(() => {
+    isVisibleRef.current = isVisible;
+  }, [isVisible]);
   const startObserver = React.useCallback(() => {
     new SelectionObserver(
       (range: Range | null, event: Event) => {
@@ -48,7 +52,7 @@ export function useSelection(): { startObserver: () => void } {
                 isSelectionBackwards(selection)
               )
             : null;
-          if (popoverPosition) {
+          if (popoverPosition && !isVisibleRef.current) {
             setTranslationText(`${range}`);
             setPosition({ ...popoverPosition });
             showPopover();

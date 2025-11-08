@@ -37,7 +37,6 @@ export const usePopoverPosition = () => {
     setPositionByCoordinates,
   };
 };
-
 /**
  * 控制弹窗显隐的hooks
  * @returns
@@ -79,7 +78,6 @@ export const usePopoverVisibility = () => {
  */
 export const useTranslationText = () => {
   const { translationText, dispatch } = useStore();
-  // const text = useMemo(() => translationText, [translationText]);
   const setTranslationText = useCallback(
     (value: string) => {
       dispatch({
@@ -102,7 +100,7 @@ export const useTranslationText = () => {
 export const useCurrentmark = () => {
   const { currentMark, dispatch } = useStore();
   const setCurrentMark = useCallback(
-    (value: SerializedRange) => {
+    (value: SerializedRange | null) => {
       dispatch({
         type: "SET_CURRENT_MARK",
         payload: value,
@@ -110,27 +108,17 @@ export const useCurrentmark = () => {
     },
     [dispatch]
   );
+
+  const clearCurrentMark = useCallback(() => {
+    dispatch({
+      type: "SET_CURRENT_MARK",
+      payload: null,
+    });
+  }, [dispatch]);
+
   return {
     currentMark,
     setCurrentMark,
-  };
-};
-
-/**
- * 设置弹窗的位置、翻译文本、是否显隐、当前的标记
- */
-export const useSetTriggeringExistingMark = () => {
-  const { dispatch } = useStore();
-  const setTriggeringExistingMark = useCallback(
-    (value: TriggeringExistingMarkType) => {
-      dispatch({
-        type: "TRIGGERING_EXISTING_MARK",
-        payload: value,
-      });
-    },
-    [dispatch]
-  );
-  return {
-    setTriggeringExistingMark,
+    clearCurrentMark,
   };
 };

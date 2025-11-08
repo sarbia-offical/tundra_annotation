@@ -151,6 +151,7 @@ export class Marker {
         color,
         createDate,
       };
+      this._window.getSelection()?.removeAllRanges();
       return this.state.uidToSerializedRange[uid];
     } catch (error) {
       this._document.head.removeChild(blackListedElementStyle);
@@ -425,6 +426,9 @@ export class Marker {
         element.parentNode?.insertBefore(childNode, element);
       }
       element.parentNode?.removeChild(element);
+    }
+    if (this.state.uidToSerializedRange[id]) {
+      delete this.state.uidToSerializedRange[id];
     }
   }
 

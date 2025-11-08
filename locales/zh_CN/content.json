@@ -7,8 +7,8 @@
   "add": "添加",
   "save": "保存",
   "cancel": "取消",
-  "editAnnotate":"编辑注释",
-  "deleteAnnotate":"删除注释",
+  "editAnnotate": "编辑注释",
+  "deleteAnnotate": "删除注释",
   "editAnnotateTips": "你可以新增或删除笔记",
   "annotatePlaceholder": "请输入此刻所想的内容",
   "veificationMessage": "$1$最少要有$2$个字符",
@@ -21,5 +21,15 @@
   "pinMessage": "点击固定面板",
   "noMoreNotes": "孤舟蓑笠翁，独钓寒江雪",
   "underConstruction": "该页面正在开发中...",
-  "i18n_Translation": "翻译"
+  "i18n_Translation": "翻译",
+  "justNow": "刚刚",
+  "minutesAgo": "{{minutes}}分钟前",
+  "hoursAgo": "{{hours}}小时前",
+  "daysAgo": "{{days}}天前",
+  "deleteMarker": "删除标记",
+  "myMarks": "我的标记",
+  "totalMarks": "共 {{count}} 条",
+  "noMarks": "暂无标记",
+  "createMarkHint": "选中文本并选择颜色创建标记",
+  "openMarkList": "打开标记列表"
 }

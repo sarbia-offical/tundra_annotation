@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 
 export interface PopoverPositionType {
   x: number;
@@ -6,33 +6,15 @@ export interface PopoverPositionType {
 }
 
 /**
- * 暴露的钩子
- */
-export interface TranslationPanelRef {
-  /**
-   * 打开翻译菜单
-   */
-  open: () => void;
-  /**
-   * 关闭翻译菜单
-   */
-  close: () => void;
-}
-
-/**
  * 组件的参数
  */
-export interface TranslationPanelProps {
+export interface TranslationPanelProps extends PropsWithChildren {
   translateText: string;
   isPopoverOpen: boolean;
   position: PopoverPositionType;
-  children?: React.ReactNode | undefined;
+  to: string;
   className?: string;
-  asChild?: boolean;
-  autoSize?: boolean;
-  disabled?: boolean;
-  minWidth?: string;
-  maxWidth?: string;
+  closePopover?: () => void;
 }
 
 export enum ActionType {
@@ -46,7 +28,7 @@ export type StoreAction = {
 
 export interface TranslationPanelState extends TranslationPanelProps {}
 
-export interface TranslationContextType {
+export interface TranslationPanelContextType {
   state: TranslationPanelState;
   dispatch: React.Dispatch<StoreAction>;
 }

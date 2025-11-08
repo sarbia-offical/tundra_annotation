@@ -23,12 +23,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { SwitchType } from "@/components/ui/switch/SwitchTypes";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import { useDisplaySettings } from "@/store/store.hooks";
+import { createConfig } from "@/constant/model";
+import {
+  useConfig,
+  useUpdateConfig,
+  useConfigInitialized,
+} from "@/store/configStore";
 
 interface SettingsProps extends React.ComponentProps<"div"> {
   className?: string;
@@ -44,23 +49,10 @@ type FormValues = {
 
 const Settings = ({ className, children }: SettingsProps) => {
   const { t } = useTranslation();
-  const {
-    defaultConfiguration,
-    isInitialized,
-    initialConfiguration,
-    setStatus,
-    setTheme,
-    setSystemLanguage,
-    setFontDisplay,
-    setUnderlineDisplay,
-    resetStorage,
-    updateStorage,
-  } = useDisplaySettings();
-
-  const defaultValues = useMemo(
-    () => defaultConfiguration,
-    [defaultConfiguration]
-  );
+  const configState = useConfig();
+  const updateConfig = useUpdateConfig();
+  const isInitialized = useConfigInitialized();
+  const defaultValues = useMemo(() => createConfig(), []);
 
   const FormSchema = z.object({
     status: z
@@ -85,30 +77,57 @@ const Settings = ({ className, children }: SettingsProps) => {
     resolver: zodResolver(FormSchema),
   });
 
-  const onSubmit = (data: FormValues) => {
-    toast.success(t("i18n_Submit_Message"));
-    updateStorage({
-      ...initialConfiguration,
-      ...data,
-    });
-  };
+  // 当配置初始化完成后，用实际的配置值重置表单
+  // 监听 configState 变化，当 storage 被手动修改时也能更新表单
   useEffect(() => {
-    if (isInitialized) {
-      form.reset(defaultValues);
+    if (isInitialized && configState) {
+      const newFormValues = {
+        status: configState.status,
+        theme: configState.theme,
+        fontDisplay: configState.fontDisplay || defaultValues.fontDisplay,
+        underlineDisplay:
+          configState.underlineDisplay || defaultValues.underlineDisplay,
+        systemLanguage:
+          configState.systemLanguage || defaultValues.systemLanguage,
+      };
+
+      // 只在值真正改变时才重置表单，避免不必要的渲染
+      const currentValues = form.getValues();
+      const hasChanged =
+        currentValues.status !== newFormValues.status ||
+        currentValues.theme !== newFormValues.theme ||
+        currentValues.fontDisplay !== newFormValues.fontDisplay ||
+        currentValues.systemLanguage !== newFormValues.systemLanguage ||
+        JSON.stringify(currentValues.underlineDisplay) !==
+          JSON.stringify(newFormValues.underlineDisplay);
+
+      if (hasChanged) {
+        form.reset(newFormValues);
+      }
     }
-  }, [isInitialized, defaultValues]);
-  if (!isInitialized) {
-    return (
-      <div
-        className={cn(
-          "text-foreground flex items-center justify-center h-40",
-          className
-        )}
-      >
-        <div>{t("i18n_Loading")}...</div>
-      </div>
-    );
-  }
+  }, [isInitialized, configState]); // 监听 configState 变化
+
+  const onSubmit = (data: FormValues) => {
+    updateConfig(data);
+    toast.success(t("i18n_Submit_Message"));
+  };
+
+  const handleReset = () => {
+    // 重置为默认配置
+    const resetConfig = createConfig();
+    form.reset({
+      status: resetConfig.status,
+      theme: resetConfig.theme,
+      fontDisplay: resetConfig.fontDisplay,
+      underlineDisplay: resetConfig.underlineDisplay,
+      systemLanguage: resetConfig.systemLanguage,
+    });
+
+    // 更新到 storage
+    updateConfig(resetConfig);
+
+    toast.success(t("i18n_Reset") + " " + t("i18n_Submit_Message"));
+  };
   return (
     <div className={cn("text-foreground", className)}>
       <Form {...form}>
@@ -124,7 +143,8 @@ const Settings = ({ className, children }: SettingsProps) => {
                     options={options.STATUS}
                     defaultValue={field.value}
                     onValueChange={(value: string) => {
-                      setStatus(value as STATUS);
+                      const status = value as STATUS;
+                      console.log("status", status);
                       field.onChange(value);
                     }}
                     animationConfig={{
@@ -149,8 +169,10 @@ const Settings = ({ className, children }: SettingsProps) => {
                     selectType="single"
                     defaultValue={field.value}
                     onValueChange={(value: string[]) => {
-                      setTheme(value.length > 0 ? (value[0] as THEME) : null);
-                      field.onChange(value);
+                      const theme =
+                        value.length > 0 ? (value[0] as THEME) : null;
+                      console.log(theme);
+                      field.onChange(theme);
                     }}
                     animationConfig={{
                       badgeAnimation: "bounce",
@@ -175,10 +197,10 @@ const Settings = ({ className, children }: SettingsProps) => {
                     selectType="single"
                     defaultValue={field.value}
                     onValueChange={(value: string[]) => {
-                      setSystemLanguage(
-                        value.length > 0 ? (value[0] as SYSTEM_LANGUAGE) : null
-                      );
-                      field.onChange(value);
+                      const systemLanguage =
+                        value.length > 0 ? (value[0] as SYSTEM_LANGUAGE) : null;
+                      console.log("systemLanguage", systemLanguage);
+                      field.onChange(systemLanguage);
                     }}
                     animationConfig={{
                       badgeAnimation: "bounce",
@@ -203,10 +225,10 @@ const Settings = ({ className, children }: SettingsProps) => {
                     selectType="single"
                     defaultValue={field.value}
                     onValueChange={(value: string[]) => {
-                      setFontDisplay(
-                        value.length > 0 ? (value[0] as FONT_DISPLAY) : null
-                      );
-                      field.onChange(value);
+                      const fontDisplay =
+                        value.length > 0 ? (value[0] as FONT_DISPLAY) : null;
+                      console.log("fontDisplay", fontDisplay);
+                      field.onChange(fontDisplay);
                     }}
                     animationConfig={{
                       badgeAnimation: "bounce",
@@ -231,8 +253,9 @@ const Settings = ({ className, children }: SettingsProps) => {
                     selectType="multiple"
                     defaultValue={field.value}
                     onValueChange={(value: string[]) => {
-                      setUnderlineDisplay(value as UNDERLINE_DISPLAY[]);
-                      field.onChange(value);
+                      const underlineDisplay = value as UNDERLINE_DISPLAY[];
+                      console.log("underlineDisplay", underlineDisplay);
+                      field.onChange(underlineDisplay);
                     }}
                     animationConfig={{
                       badgeAnimation: "bounce",
@@ -255,11 +278,7 @@ const Settings = ({ className, children }: SettingsProps) => {
               className="flex-1"
               variant={"outline"}
               type="reset"
-              onClick={() => {
-                if (initialConfiguration) {
-                  resetStorage(initialConfiguration);
-                }
-              }}
+              onClick={handleReset}
             >
               <RotateCcw className="mr-2" />
               {t("i18n_Reset")}

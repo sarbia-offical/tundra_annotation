@@ -1,60 +1,33 @@
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
 import React from "react";
-import {
-  TranslationPanelProps,
-  TranslationPanelRef,
-} from "./TranslationPanel.type";
-import { StoreProvider } from "./TranslationPanel.context";
-import { useTranslationPopover } from "./TranslationPanel.hook";
-import { useTranslation } from "react-i18next";
-import { Languages } from "lucide-react";
+import { TranslationPanelProps } from "./TranslationPanel.type";
+import { TranslationContextProvider } from "./TranslationPanel.context";
+import { useTranslationContext } from "./TranslationPanel.hook";
+import { Popover, PopoverContent } from "@/components/ui/popover/Popover";
 
-const TranslationPanel = React.forwardRef<
-  TranslationPanelRef,
-  TranslationPanelProps
->((props, ref) => {
-  const { positionStyle, visible, textContext, children, className } =
-    useTranslationPopover(props);
-  const { t } = useTranslation();
-  React.useImperativeHandle(ref, () => ({
-    open: () => {},
-    close: () => {},
-  }));
+const TranslationPanelWrapper: React.FC<TranslationPanelProps> = (props) => {
+  const { visible, positionStyle, to, textContext, children, close } =
+    useTranslationContext(props);
   return (
-    <StoreProvider initialConfig={props}>
-      {visible ? (
-        <div
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ${className}`}
-          style={{
-            ...positionStyle,
-          }}
-        >
-          <Popover open={true} modal={false}>
-            <PopoverTrigger asChild>
-              <div />
-            </PopoverTrigger>
-            <PopoverContent className="z-[1000] dark:bg-neutral-900">
-              <div className="grid gap-4">
-                <div className="space-y-2">
-                  <h4 className="leading-none font-medium ">
-                    <Languages />
-                  </h4>
-                  <p className="text-muted-foreground text-sm">{textContext}</p>
-                </div>
-                {children}
-              </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-      ) : (
-        <></>
-      )}
-    </StoreProvider>
+    <TranslationContextProvider initialConfig={props}>
+      <Popover
+        isOpen={visible}
+        onClose={() => {
+          close && close();
+        }}
+        position={{
+          top: `${positionStyle.y}px`,
+          left: `${positionStyle.x}px`,
+        }}
+      >
+        <PopoverContent className="w-[500px] min-h-[100px] flex flex-col justify-between">
+          <div>{textContext}</div>
+          <div className="mt-4">{children}</div>
+        </PopoverContent>
+      </Popover>
+    </TranslationContextProvider>
   );
-});
+};
+
+const TranslationPanel = React.memo(TranslationPanelWrapper);
 TranslationPanel.displayName = "TranslationPanel";
 export { TranslationPanel };

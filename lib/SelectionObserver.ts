@@ -175,15 +175,22 @@ export function updatePopoverPosOnSelectionChange(
   rect: DOMRect,
   selectionIsBackwards: boolean
 ): Position {
-  // 强制触发重排，确保获取正确的滚动位置
   const scrollX = window.scrollX || window.pageXOffset;
   const scrollY = window.scrollY || window.pageYOffset;
   const position: Position = {
     x: 0,
     y: 0,
   };
-  position.y = rect.top + scrollY + 30;
-  position.x = rect.left + scrollX + 70;
+  if (selectionIsBackwards) {
+    position.y = rect.top + scrollY - rect.height - 110;
+  } else {
+    position.y = rect.top + scrollY + rect.height + 30;
+  }
+  if (selectionIsBackwards) {
+    position.x = rect.left + scrollX;
+  } else {
+    position.x = rect.right + scrollX - rect.width;
+  }
 
   if (isMobileOrTablet) {
     position.x = document.documentElement.clientWidth / 2;
@@ -195,6 +202,24 @@ export function updatePopoverPosOnSelectionChange(
 
   if (position.x > document.documentElement.clientWidth - 76) {
     position.x = document.documentElement.clientWidth - 76;
+  }
+
+  // 检查 x + 376 是否超出页面 scrollWidth
+  const pageScrollWidth = document.documentElement.scrollWidth;
+  if (position.x + 300 > pageScrollWidth) {
+    position.x = pageScrollWidth - 376;
+  }
+  if (position.x <= 76) {
+    position.x = 76;
+  }
+
+  // 检查 y + 270 是否超出页面 scrollHeight
+  const pageScrollHeight = document.documentElement.scrollHeight;
+  if (position.y + 100 > pageScrollHeight) {
+    position.y = pageScrollHeight - 176;
+  }
+  if (position.y <= 76) {
+    position.y = 76;
   }
 
   return position;

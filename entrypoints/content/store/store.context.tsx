@@ -26,6 +26,7 @@ const MarkStoreReducer = produce(
         break;
       case "SET_TRANSLATION_TEXT":
         draft.translationText = action.payload;
+        break;
       case "SET_CURRENT_MARK":
         draft.currentMark = action.payload as SerializedRange;
         break;
@@ -40,6 +41,9 @@ const MarkStoreReducer = produce(
         draft.popoverVisible = popoverVisible;
         draft.popoverPosition = popoverPosition;
         draft.translationText = translationText;
+        break;
+      default:
+        break;
     }
   }
 );
@@ -56,13 +60,10 @@ export const MarkStoreProvider: React.FC<MarkStoreProviderProps> = ({
     ...initialConfig,
   };
   const [state, dispatch] = useReducer(MarkStoreReducer, initialState);
-  const contextValue = useMemo<MarkStoreContextType>(
-    () => ({
-      ...state,
-      dispatch,
-    }),
-    [state]
-  );
+  const contextValue = {
+    ...state,
+    dispatch,
+  };
   return (
     <MarkStoreContext.Provider value={contextValue}>
       {children}

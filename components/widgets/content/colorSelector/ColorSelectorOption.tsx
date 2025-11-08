@@ -1,6 +1,6 @@
 import React from "react";
 import { ColorSelectorOptionConfig } from "./ColorSelector.type";
-import { useColorSelectorContext } from "./colorSelector.context";
+import { useColorSelectorContext } from "./ColorSelector.context";
 import { Check } from "lucide-react";
 
 const ColorSelectorOption = React.forwardRef<

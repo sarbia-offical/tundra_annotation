@@ -6,16 +6,19 @@ interface Mapping {
 
 // ===== 配置定义 =====
 export interface Config {
-  status: string;
-  theme: string;
-  to: string;
-  fontDisplay?: string;
-  underlineDisplay?: string[];
-  systemRole: Mapping;
-  userRole: Mapping;
-  translationServices: string;
-  systemLanguage?: string;
+  status: string; // 插件状态
+  theme: string; // 主题
+  to: string; // 翻译目标语言
+  fontDisplay?: string; // 字体展示风格
+  underlineDisplay?: string[]; // 下划线展示风格
+  systemRole: Mapping; // 系统角色
+  userRole: Mapping; // 用户角色
+  translationServices: string; // 翻译服务
+  systemLanguage?: string; // 系统语言
+  apiUrl?: string; // 自定义API地址
 }
+
+export const apiUrl = "http://localhost:3001";
 
 // 工厂函数：生成默认配置
 export const createConfig = (): Config => ({
@@ -28,6 +31,7 @@ export const createConfig = (): Config => ({
   userRole: contextFactory(defaultOptions.USER_ROLE),
   translationServices: SERVICES.GOOGLE,
   systemLanguage: defaultOptions.SYSTEM_LANGUAGE,
+  apiUrl,
 });
 
 const contextFactory = (str: string): Mapping => {

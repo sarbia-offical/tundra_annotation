@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  ColorSelectorOptionConfig,
   ColorSelectorProps,
   defaultColorSelectorArray,
 } from "./ColorSelector.type";
