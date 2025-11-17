@@ -81,6 +81,69 @@ export const defaultColorSelectorArray: ColorSelectorOptionConfig[] = [
       bgColor: "#43b244",
     },
   },
+  {
+    label: "珊瑚橙",
+    value: "#ff7f50",
+    style: {
+      bgColor: "#ff7f50",
+    },
+  },
+  {
+    label: "薰衣草紫",
+    value: "#9b59b6",
+    style: {
+      bgColor: "#9b59b6",
+    },
+  },
+  {
+    label: "青柠绿",
+    value: "#00ff7f",
+    style: {
+      bgColor: "#00ff7f",
+    },
+  },
+  {
+    label: "天空蓝",
+    value: "#87ceeb",
+    style: {
+      bgColor: "#87ceeb",
+    },
+  },
+  {
+    label: "玫瑰粉",
+    value: "#ff69b4",
+    style: {
+      bgColor: "#ff69b4",
+    },
+  },
+  {
+    label: "琥珀黄",
+    value: "#ffbf00",
+    style: {
+      bgColor: "#ffbf00",
+    },
+  },
+  {
+    label: "青绿",
+    value: "#20b2aa",
+    style: {
+      bgColor: "#20b2aa",
+    },
+  },
+  {
+    label: "梅子紫",
+    value: "#8b008b",
+    style: {
+      bgColor: "#8b008b",
+    },
+  },
+  {
+    label: "赭石棕",
+    value: "#cd853f",
+    style: {
+      bgColor: "#cd853f",
+    },
+  },
 ];
 
 export interface ColorSelectorContextValue extends ColorSelectorProps {

@@ -1,7 +1,6 @@
 import { MarkerInstanceType } from "@/lib/Marks/Marker";
 import { SerializedRange } from "@/lib/Marks/Mark.type";
 import { makeid } from "@/lib/utils";
-import { useCallback } from "react";
 
 /**
  * 对选中的文字区块进行高亮处理

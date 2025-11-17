@@ -182,7 +182,7 @@ export function updatePopoverPosOnSelectionChange(
     y: 0,
   };
   if (selectionIsBackwards) {
-    position.y = rect.top + scrollY - rect.height - 110;
+    position.y = rect.top + scrollY - rect.height - 200;
   } else {
     position.y = rect.top + scrollY + rect.height + 30;
   }

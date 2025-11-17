@@ -10,7 +10,7 @@ export interface Config {
   theme: string; // 主题
   to: string; // 翻译目标语言
   fontDisplay?: string; // 字体展示风格
-  underlineDisplay?: string[]; // 下划线展示风格
+  underlineDisplay?: string; // 下划线展示风格 (改为单选)
   systemRole: Mapping; // 系统角色
   userRole: Mapping; // 用户角色
   translationServices: string; // 翻译服务
@@ -26,7 +26,7 @@ export const createConfig = (): Config => ({
   theme: defaultOptions.THEME,
   to: defaultOptions.TO,
   fontDisplay: defaultOptions.FONT_DISPLAY,
-  underlineDisplay: [defaultOptions.UNDERLINE_DISPLAY],
+  underlineDisplay: defaultOptions.UNDERLINE_DISPLAY,
   systemRole: contextFactory(defaultOptions.SYSTEM_ROLE),
   userRole: contextFactory(defaultOptions.USER_ROLE),
   translationServices: SERVICES.GOOGLE,

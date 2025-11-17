@@ -24,15 +24,13 @@ const ColorSelector = React.forwardRef<ColorSelectorRef, ColorSelectorProps>(
     }));
     return (
       <ColorSelectorProvider value={contextValue}>
-        <div className={cn("dark")}>
-          <div className={`flex ${className || ""}`}>
-            {/* 取消颜色选项 */}
-            <ColorSelectorCancelOption />
-            {/* 颜色选项 */}
-            {colorList.map((color: ColorSelectorOptionConfig) => {
-              return <ColorSelectorOption {...color} key={color.value} />;
-            })}
-          </div>
+        <div className={cn("grid grid-cols-8 gap-4 w-full", className)}>
+          {/* 取消颜色选项 */}
+          <ColorSelectorCancelOption />
+          {/* 颜色选项 */}
+          {colorList.map((color: ColorSelectorOptionConfig) => {
+            return <ColorSelectorOption {...color} key={color.value} />;
+          })}
         </div>
       </ColorSelectorProvider>
     );

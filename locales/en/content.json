@@ -31,5 +31,6 @@
   "totalMarks": "Total {{count}}",
   "noMarks": "No marks yet",
   "createMarkHint": "Select text and choose a color to create a mark",
-  "openMarkList": "Open mark list"
+  "openMarkList": "Open mark list",
+  "cancelHighlight": "Cancel highlight"
 }

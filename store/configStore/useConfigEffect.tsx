@@ -32,7 +32,8 @@ const applyTheme = (theme: string, isShadowDOM: boolean = false) => {
  * @param isShadowDOM - 是否在 Shadow DOM 环境中
  */
 export const useConfigEffect = (isShadowDOM: boolean = false) => {
-  const { theme, systemLanguage, to } = useConfigValues();
+  const { theme, systemLanguage, fontDisplay, underlineDisplay, to } =
+    useConfigValues();
 
   const { i18n } = useTranslation();
 
@@ -50,5 +51,5 @@ export const useConfigEffect = (isShadowDOM: boolean = false) => {
     }
   }, [systemLanguage, i18n]);
 
-  return { theme, systemLanguage, to };
+  return { theme, systemLanguage, to, fontDisplay, underlineDisplay };
 };

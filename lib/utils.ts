@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { v4 as uuidv4 } from "uuid";
 import { cancelTruncation, HighlightClassName } from "./Marks/Mark.type";
+import { FONT_DISPLAY, UNDERLINE_DISPLAY } from "@/constant/options";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -43,22 +44,52 @@ export function generateUUID() {
 }
 
 /**
- * 高亮样式，波浪线加背景色
- * @param element
- * @param bgc
+ * 高亮样式配置接口
+ */
+export interface HighlightStyleConfig {
+  fontDisplay?: string; // 字体显示样式：default, bold, italic
+  underlineDisplay?: string; // 下划线显示样式：default, wavy
+}
+
+/**
+ * 高亮样式，支持配置波浪线和字体样式
+ * @param element HTML元素
+ * @param bgc 背景颜色
+ * @param config 样式配置
  */
 export function applyHighlightStyle(
   element: HTMLElement,
   bgc: string,
-  bgImage: `url("${string}")`
+  config?: HighlightStyleConfig
 ) {
   element.parentElement?.classList.add(`${cancelTruncation}`);
   element.classList.add(`${HighlightClassName}`);
-  element.style.setProperty("--underline-bg", bgImage);
+
+  // 基础背景色
   element.style.setProperty("--bg", bgc);
   Object.assign(element.style, {
     backgroundColor: `${bgc}55`,
   });
+
+  // 应用下划线样式
+  if (config?.underlineDisplay === UNDERLINE_DISPLAY.WAVY) {
+    const wavyBg = createWavyLines(bgc);
+    element.style.setProperty("--underline-bg", wavyBg);
+  } else {
+    // 默认样式，不显示下划线
+    element.style.setProperty("--underline-bg", "none");
+  }
+
+  // 应用字体样式
+  if (config?.fontDisplay === FONT_DISPLAY.BOLD) {
+    element.style.fontWeight = "bold";
+  } else if (config?.fontDisplay === FONT_DISPLAY.ITALIC) {
+    element.style.fontStyle = "italic";
+  } else {
+    // 默认样式
+    element.style.fontWeight = "normal";
+    element.style.fontStyle = "normal";
+  }
 }
 
 export function createWavyLines(color: string): `url("${string}")` {

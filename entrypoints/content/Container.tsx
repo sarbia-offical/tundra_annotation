@@ -1,10 +1,3 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
 import "@/assets/tailwind.css";
 import { TranslationPanel } from "@/components/widgets/content/translationPanel";
 import { ColorSelector } from "@/components/widgets/content/colorSelector";
@@ -22,7 +15,6 @@ import { useMarkerInitialization } from "./hooks/useMarkerInitialization";
 import { useColorHighlight } from "./hooks/useHighlight";
 import { cancelableApi } from "@/service/newapi";
 import { useConfigEffect } from "@/store/configStore/useConfigEffect";
-import { MarkStoreProvider } from "@/store/markStore";
 
 interface DynamicComponentProps {
   id: string;
@@ -95,12 +87,23 @@ const Container: React.FC = () => {
   );
 
   const colorSelectorElement = useMemo(
-    () => <ColorSelector onValueChange={handleColorChange} />,
+    () => (
+      <ColorSelector
+        onValueChange={handleColorChange}
+        className="p-4 rounded-lg border-[1px] border-ctx-primary-inverse/20"
+      />
+    ),
     [handleColorChange]
   );
 
   return (
-    <div>
+    <div
+      style={{
+        fontSize: "16px",
+        lineHeight: "1.5",
+      }}
+      className="tundra-root"
+    >
       {/* 翻译&颜色选择面板 */}
       <TranslationPanel
         translateText={translationText}
@@ -109,13 +112,25 @@ const Container: React.FC = () => {
         to={to}
         closePopover={handleClosePopover}
       >
-        {colorSelectorElement}
+        <>
+          {colorSelectorElement}
+          <div
+            onClick={(event: React.MouseEvent<HTMLDivElement>) => {
+              console.log(event);
+              setTimeout(() => {
+                console.log("event.type", event.type);
+              }, 1000);
+            }}
+          >
+            点击
+          </div>
+        </>
       </TranslationPanel>
 
       {/* 打开标记面板按钮 */}
       <MarkPanelTrigger
         onClick={() => setIsMarkPanelOpen((prev) => !prev)}
-        className="fixed right-4 bottom-4 z-[9999] rounded-full shadow-lg"
+        className="fixed right-6 bottom-6 z-[9999] rounded-full shadow-lg"
       />
 
       {/* 标记面板 */}

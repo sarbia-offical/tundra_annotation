@@ -14,19 +14,23 @@ const ColorSelectorOption = React.forwardRef<
     <div
       ref={ref}
       className={`relative inline-flex items-center justify-center
-        w-[20px] h-[20px] rounded-full mx-[3px]
+        flex-[0.8] aspect-square rounded-lg
         cursor-pointer shadow-sm
-        transform transition-transform 
+        transform transition-all duration-200
         hover:brightness-105 hover:scale-110 
         opacity-70 hover:opacity-100
-        ${selected ? "ring-2 ring-offset-1 ring-indigo-400 opacity-100" : ""}`}
+        ${
+          selected
+            ? "ring-2 ring-offset-1 ring-indigo-400 opacity-100 scale-105"
+            : ""
+        }`}
       style={{ backgroundColor: style.bgColor }}
       data-color={value}
       onPointerDown={(_e: React.PointerEvent<HTMLDivElement>) => {
         toggleOption(value);
       }}
     >
-      {selected ? <Check className="w-3 h-3 text-white" /> : <></>}
+      {selected ? <Check className="w-5 h-5 text-white" /> : <></>}
     </div>
   );
 });

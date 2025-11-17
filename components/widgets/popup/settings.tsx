@@ -43,7 +43,7 @@ type FormValues = {
   status: string;
   theme: string;
   fontDisplay: string;
-  underlineDisplay: string[];
+  underlineDisplay: string; // 改为单选
   systemLanguage: string;
 };
 
@@ -65,7 +65,7 @@ const Settings = ({ className, children }: SettingsProps) => {
       .string()
       .min(1, t("i18n_Empty_Message", { field: t("i18n_Text_Style") })),
     underlineDisplay: z
-      .array(z.string())
+      .string()
       .min(1, t("i18n_Empty_Message", { field: t("i18n_Underline_Style") })),
     systemLanguage: z
       .string()
@@ -98,8 +98,7 @@ const Settings = ({ className, children }: SettingsProps) => {
         currentValues.theme !== newFormValues.theme ||
         currentValues.fontDisplay !== newFormValues.fontDisplay ||
         currentValues.systemLanguage !== newFormValues.systemLanguage ||
-        JSON.stringify(currentValues.underlineDisplay) !==
-          JSON.stringify(newFormValues.underlineDisplay);
+        currentValues.underlineDisplay !== newFormValues.underlineDisplay;
 
       if (hasChanged) {
         form.reset(newFormValues);
@@ -179,6 +178,7 @@ const Settings = ({ className, children }: SettingsProps) => {
                     }}
                     searchable={false}
                     deleteAll={false}
+                    maxWidth="150px"
                   />
                 </FormControl>
                 <FormMessage className="animate-shake text-red-500" />
@@ -250,10 +250,13 @@ const Settings = ({ className, children }: SettingsProps) => {
                 <FormControl>
                   <Select
                     options={options.UNDERLINE_DISPLAY}
-                    selectType="multiple"
+                    selectType="single"
                     defaultValue={field.value}
                     onValueChange={(value: string[]) => {
-                      const underlineDisplay = value as UNDERLINE_DISPLAY[];
+                      const underlineDisplay =
+                        value.length > 0
+                          ? (value[0] as UNDERLINE_DISPLAY)
+                          : null;
                       console.log("underlineDisplay", underlineDisplay);
                       field.onChange(underlineDisplay);
                     }}

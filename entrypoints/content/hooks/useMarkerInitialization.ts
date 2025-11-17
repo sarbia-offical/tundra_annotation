@@ -1,15 +1,21 @@
-import { useState, useRef, useEffect } from "react";
 import { useSelection } from "./useSelection";
 import { useMarker } from "./useMarker";
 import { HightlightHover, Context } from "@/lib/Marks/Mark.type";
 import { Marker } from "@/lib/Marks/Marker";
-import { applyHighlightStyle, createWavyLines } from "@/lib/utils";
-import { useCurrentmark } from "../store/store.hooks";
+import { applyHighlightStyle, HighlightStyleConfig } from "@/lib/utils";
+import { useConfigEffect } from "@/store/configStore";
 
 export const useMarkerInitialization = () => {
   const markRef = useRef<Marker | null>(null);
   const { startObserver } = useSelection();
   const [buildMarker] = useMarker();
+  const fontDisplayRef = useRef<string>("");
+  const underlineDisplayRef = useRef<string>("");
+  const { fontDisplay, underlineDisplay } = useConfigEffect(true);
+  useEffect(() => {
+    fontDisplayRef.current = fontDisplay || "";
+    underlineDisplayRef.current = underlineDisplay || "";
+  }, [fontDisplay, underlineDisplay]);
 
   // 通过 uid 切换高亮元素的 hover 状态
   const toggleHighlightHover = (uid: string | undefined, isHover: boolean) => {
@@ -30,15 +36,17 @@ export const useMarkerInitialization = () => {
     }
   };
 
-  // 启动高亮
+  // 启动高亮 - 只在初始化时运行一次
   useEffect(() => {
     startObserver();
     const marker = buildMarker(
       {
         paintHighlight: (context: Context, element: HTMLElement) => {
           const bgc = context?.serializedRange?.color || "#ffff00";
-          const wavyBg = createWavyLines(bgc);
-          applyHighlightStyle(element, bgc, wavyBg);
+          applyHighlightStyle(element, bgc, {
+            fontDisplay: fontDisplayRef.current,
+            underlineDisplay: underlineDisplayRef.current,
+          });
         },
       },
       {

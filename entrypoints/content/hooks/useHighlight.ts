@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { useTextHighlighter } from "../hooks/usePaint";
 import { useCurrentmark } from "../store/store.hooks";
 import { Marker } from "@/lib/Marks/Marker";

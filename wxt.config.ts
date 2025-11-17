@@ -1,5 +1,4 @@
 import { defineConfig } from "wxt";
-import tailwindcss from "@tailwindcss/vite";
 import { resolve } from "path";
 import fs from "fs";
 
@@ -24,7 +23,7 @@ export default defineConfig({
     default_locale: "en",
   },
   analysis: {
-    enabled: true,
+    enabled: process.env.NODE_ENV === "production",
   },
   vite: (env) => ({
     define: {

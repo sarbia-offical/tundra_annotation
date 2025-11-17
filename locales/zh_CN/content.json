@@ -31,5 +31,6 @@
   "totalMarks": "共 {{count}} 条",
   "noMarks": "暂无标记",
   "createMarkHint": "选中文本并选择颜色创建标记",
-  "openMarkList": "打开标记列表"
+  "openMarkList": "打开标记列表",
+  "cancelHighlight": "取消高亮"
 }

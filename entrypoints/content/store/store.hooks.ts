@@ -1,6 +1,6 @@
 import { SerializedRange } from "@/lib/Marks/Mark.type";
 import { useStore } from "./store.context";
-import { PopoverPositionType, TriggeringExistingMarkType } from "./store.type";
+import { PopoverPositionType } from "./store.type";
 
 /**
  * 控制弹窗位置的hooks
